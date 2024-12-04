@@ -1,0 +1,106 @@
+:root {
+  /* Colors */
+  --c-black: #000;
+  --c-white: #fff;
+
+  --c-dark: #191919;
+  --c-light: #f0f0f0;
+  --c-primary: #f0f;
+  --c-secondary: #0ff;
+  --c-accent: #ff0;
+
+  --c-success: #0f0;
+  --c-error: #f00;
+
+  /* Dimensions */
+  --site-padding: 1rem;
+  --content-width: 50rem;
+  --content-width-lg: 75rem;
+
+  /* Fonts */
+  --ff-default: 'Fira Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --ff-title: 'Exo', Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+}
+
+/**
+ * Globals
+ */
+html {
+  font-size: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--ff-default);
+  font-size: 1.25rem;
+  line-height: 1.65;
+  width: 100%;
+}
+
+/**
+ * Type
+ */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  line-height: 1.15;
+}
+
+h1,
+.h1 {
+  font-size: 3.05rem;
+}
+
+h2,
+.h2 {
+  font-size: 2.44rem;
+}
+
+h3,
+.h3 {
+  font-size: 1.95rem;
+}
+
+h4,
+.h4 {
+  font-size: 1.56rem;
+}
+
+small {
+  font-size: 0.8rem;
+}
+
+/**
+ * Helpers
+ */
+.contain {
+  width: 100%;
+  max-width: calc(var(--content-width) + var(--site-padding) * 2);
+  padding-left: var(--site-padding);
+  padding-right: var(--site-padding);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contain-lg {
+  width: 100%;
+  max-width: calc(var(--content-width-lg) + var(--site-padding) * 2);
+  padding-left: var(--site-padding);
+  padding-right: var(--site-padding);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.full {
+  position: relative;
+  width: 100%;
+}
+
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

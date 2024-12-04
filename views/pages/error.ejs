@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <%- include ('../partials/header') %>
+
+  <main>
+    <h1><%= error.status%> Error</h1>
+    <pre><%= error.message%></pre>
+  </main>
+
+  <%- include ('../partials/footer') %>
+  <%- include ('../partials/end') %>
+</body>
+
+</html>

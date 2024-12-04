@@ -1,0 +1,16 @@
+<%# Overlay %>
+<div id="page-overlay"></div>
+
+<%# Main Scripts %>
+<script type="module" src="/main.js" defer></script>
+
+<%# Global Messages %>
+<% if (messages.length) { %>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    <% messages.forEach((message) => { %>
+    window._UTIL.showGlobalMessage('<%= message.text %>', '<%= message.type %>');
+    <% }) %>
+  });
+</script>
+<% } %>

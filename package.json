@@ -1,0 +1,36 @@
+{
+  "name": "data",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently --kill-others --names client,server \"vite build --watch\" \"nodemon server.js\"",
+    "build": "vite build",
+    "run": "NODE_ENV=production node server.js"
+  },
+  "nodemonConfig": {
+    "ext": "js,ejs",
+    "ignore": [
+      "node_modules/**",
+      "frontend/**",
+      "public/**"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "nodemon": "^3.1.7",
+    "vite": "^6.0.2"
+  }
+}
