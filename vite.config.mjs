@@ -19,6 +19,6 @@ export default defineConfig({
   },
   define: {
     __NAME__: JSON.stringify(process.env.NAME),
-    __WS_PORT__: JSON.stringify(process.env.WS_PORT)
+    __WS_PORT__: JSON.stringify(process.env.WS_PORT),
   },
 });

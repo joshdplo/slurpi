@@ -1,0 +1,98 @@
+#sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: var(--sidebar-width);
+  height: 100vh;
+  padding: var(--site-padding) var(--site-padding) var(--site-padding) .125rem;
+  border-right: 1px solid var(--c-gray);
+  box-shadow: inset -7px 0px 10px -10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+}
+
+#sidebar .top,
+#sidebar .bottom {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: .75em;
+}
+
+#sidebar hr {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background-color: var(--c-gray);
+}
+
+#sidebar .top ul {
+  display: flex;
+  flex-direction: column;
+  gap: .65em;
+  font-size: 1rem;
+}
+
+#sidebar .top ul a {
+  display: flex;
+  align-items: center;
+}
+
+#sidebar .top ul a::after {
+  content: "\261A";
+  padding-left: .5em;
+  transform: scaleX(0);
+  transform-origin: center right;
+  transition: .2s ease;
+}
+
+#sidebar .top ul a:hover::after,
+#sidebar .top ul a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+#sidebar .top ul svg {
+  height: 1.2rem;
+  margin-right: .35rem;
+}
+
+#sidebar .bottom {
+  gap: .85em;
+  margin-top: auto;
+  font-size: var(--font-size-small);
+}
+
+#sidebar .bottom svg {
+  height: 1rem;
+  margin-right: .25rem;
+}
+
+#sidebar a {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#sidebar .logo {
+  width: 100%;
+  align-items: flex-end;
+  font-size: 1rem;
+  font-family: var(--ff-title);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#sidebar .logo svg {
+  width: 2rem;
+}
+
+#sidebar .logo span {
+  transition: transform .2s ease;
+  backface-visibility: hidden;
+}
+
+#sidebar .logo:hover span {
+  transform: translateY(-25%);
+}

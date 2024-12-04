@@ -139,11 +139,18 @@ table {
   border-spacing: 0;
 }
 
+hr {
+  border: 0;
+}
+
 button {
   border: 0;
   background-color: transparent;
+  overflow: hidden;
 }
 
 a {
   color: inherit;
+  text-decoration: none;
+  overflow: hidden;
 }

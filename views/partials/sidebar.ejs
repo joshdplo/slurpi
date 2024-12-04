@@ -1,0 +1,23 @@
+<header id="sidebar">
+  <div class="top">
+    <a class="logo" href="/" title="Dashboard">
+      <%- include('../partials/svg/logo'); %><span><%= global.NAME %></span>
+    </a>
+    <hr>
+    <ul>
+      <li><a href="/tmdb" title="TMDB"><%- include('../partials/svg/tmdb'); %> TMDB</a></li>
+      <li><a href="/steam" title="Steam"><%- include('../partials/svg/steam'); %> Steam</a></li>
+      <li><a href="/spotify" title="Spotify"><%- include('../partials/svg/spotify'); %> Spotify</a></li>
+    </ul>
+  </div>
+  <div class="bottom">
+    <hr>
+    <span>X API Calls Made</span>
+    <span>Database Size: xx</span>
+    <hr>
+    <a href="https://github.com/joshdplo/slurpi" title="View Code On Github">
+      <%- include('../partials/svg/github'); %> View Source
+    </a>
+    <!-- <small>&copy; 2024 Slurpi</small> -->
+  </div>
+</header>

@@ -3,6 +3,10 @@
   --c-black: #000;
   --c-white: #fff;
 
+  --c-gray-lightest: #fefefe;
+  --c-gray-light: #e0e0e0;
+  --c-gray: #d9d9d9;
+
   --c-dark: #191919;
   --c-light: #f0f0f0;
   --c-primary: #f0f;
@@ -14,12 +18,27 @@
 
   /* Dimensions */
   --site-padding: 1rem;
-  --content-width: 50rem;
-  --content-width-lg: 75rem;
+  --sidebar-width: 12.5rem;
+  --content-width: calc(var(--sidebar-width) + 50rem);
 
   /* Fonts */
   --ff-default: 'Fira Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
   --ff-title: 'Exo', Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+  --font-size-default: 1.25rem;
+  --font-size-small: 0.8rem;
+
+  /* Definitions */
+
+  /* Rules */
+  background-color: var(--c-light);
+
+  color: var(--c-black);
+  font-family: var(--ff-default);
+  line-height: 1.65;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /**
@@ -31,9 +50,7 @@ html {
 }
 
 body {
-  font-family: var(--ff-default);
-  font-size: 1.25rem;
-  line-height: 1.65;
+  font-size: var(--font-size-default);
   width: 100%;
 }
 
@@ -46,11 +63,13 @@ h3,
 h4,
 h5 {
   line-height: 1.15;
+  font-weight: bold;
 }
 
 h1,
 .h1 {
   font-size: 3.05rem;
+  /* font-family: var(--ff-title); */
 }
 
 h2,
@@ -69,7 +88,18 @@ h4,
 }
 
 small {
-  font-size: 0.8rem;
+  font-size: var(--font-size-small);
+}
+
+p+p {
+  margin-top: 1.5rem;
+}
+
+p a {
+  text-decoration: underline;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: .25em;
+  text-decoration-color: var(--c-secondary);
 }
 
 /**
@@ -78,15 +108,6 @@ small {
 .contain {
   width: 100%;
   max-width: calc(var(--content-width) + var(--site-padding) * 2);
-  padding-left: var(--site-padding);
-  padding-right: var(--site-padding);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.contain-lg {
-  width: 100%;
-  max-width: calc(var(--content-width-lg) + var(--site-padding) * 2);
   padding-left: var(--site-padding);
   padding-right: var(--site-padding);
   margin-left: auto;
@@ -103,4 +124,40 @@ small {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.content {
+  padding: var(--site-padding) 0 var(--site-padding) var(--site-padding);
+}
+
+.spacer {
+  display: block;
+  width: 100%;
+  height: var(--site-padding);
+}
+
+.spacer-2 {
+  display: block;
+  width: 100%;
+  height: calc(var(--site-padding) * 2);
+}
+
+.spacer-3 {
+  display: block;
+  width: 100%;
+  height: calc(var(--site-padding) * 3);
+}
+
+.pad-x {
+  padding-left: var(--site-padding);
+  padding-right: var(--site-padding);
+}
+
+.pad-y {
+  padding-top: var(--site-padding);
+  padding-bottom: var(--site-padding);
+}
+
+.no-pad {
+  padding: 0;
 }

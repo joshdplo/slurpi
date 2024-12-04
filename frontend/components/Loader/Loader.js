@@ -4,7 +4,7 @@ export default function Loader() {
   }
 
   function init() {
-    console.log('-> Loader component initialized');
+    console.log('🥤-> Loader component initialized');
     document.addEventListener('loader', onLoaderEvent);
   };
 
