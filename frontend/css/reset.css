@@ -147,6 +147,11 @@ button {
   border: 0;
   background-color: transparent;
   overflow: hidden;
+  cursor: pointer;
+}
+
+button[disabled] {
+  cursor: not-allowed;
 }
 
 a {

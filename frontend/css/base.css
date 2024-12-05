@@ -9,9 +9,9 @@
 
   --c-dark: #191919;
   --c-light: #f0f0f0;
-  --c-primary: #f0f;
-  --c-secondary: #0ff;
-  --c-accent: #ff0;
+  --c-primary: #FF85FF;
+  --c-secondary: #94FFFF;
+  --c-accent: #FFFF57;
 
   --c-status-info: #FFFFB8;
   --c-status-success: #B3FFB3;
@@ -129,7 +129,7 @@ p a {
 }
 
 .content {
-  padding: var(--site-padding) 0 var(--site-padding) var(--site-padding);
+  padding: var(--site-padding);
 }
 
 .spacer {

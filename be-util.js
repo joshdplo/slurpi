@@ -1,7 +1,6 @@
 import { fileURLToPath } from 'url';
 import path from 'node:path';
 import fs from 'node:fs';
-import { format } from 'path';
 
 /**
  * Path Helpers

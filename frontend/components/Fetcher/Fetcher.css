@@ -1,0 +1,51 @@
+.fetcher-status {
+  position: relative;
+  display: flex;
+  gap: .7rem;
+  margin-bottom: 1rem;
+}
+
+.fetcher-status span {
+  padding: .25rem .5rem;
+  font-size: .9rem;
+  background-color: var(--c-dark);
+  color: var(--c-white);
+}
+
+.fetchers {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fetcher {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  min-height: 5rem;
+  gap: 1rem;
+  border: 1px solid var(--c-gray);
+  border-radius: .1rem;
+}
+
+.fetcher button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 8rem;
+  padding: .75rem;
+  border-right: 1px solid var(--c-gray);
+  background-color: var(--c-dark);
+}
+
+.fetcher button svg {
+  height: 4rem;
+  fill: var(--c-secondary);
+  transition: fill .2s ease;
+}
+
+.fetcher button:hover svg {
+  fill: var(--c-primary);
+}

@@ -15,7 +15,6 @@ function shiftAlerts() {
 
 export const showAlert = (text, type = 'info', duration = durationDefault) => {
   const totalAlerts = alertContainer.childNodes.length;
-  console.log(`${totalAlerts} EXISTING ALERTS`);
 
   const alert = document.createElement('div');
   alert.setAttribute('aria-role', 'alert');

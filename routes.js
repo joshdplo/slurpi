@@ -1,5 +1,8 @@
 import express from "express";
-import { pageDashboard } from './controllers/defaultController.js';
+import {
+  pageDashboard,
+  apiTestFetch
+} from './controllers/defaultController.js';
 import {
   pageTMDB
 } from './controllers/tmdbController.js';
@@ -22,6 +25,7 @@ router.get('/spotify', pageSpotify);
 /**
  * API
  */
-router.get('/api/status', (req, res) => res.json({ success: true, t: Date.now(), dbSize: req.locals.dbSize }));
+router.get('/api/status', (req, res) => res.json({ success: true, t: Date.now() }));
+router.get(['/api/test-fetch', '/api/test-fetch/:delay'], apiTestFetch);
 
 export default router;

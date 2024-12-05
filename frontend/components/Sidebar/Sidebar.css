@@ -8,7 +8,6 @@
   height: 100vh;
   padding: var(--site-padding) var(--site-padding) var(--site-padding) .125rem;
   border-right: 1px solid var(--c-gray);
-  box-shadow: inset -7px 0px 10px -10px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
 }
 

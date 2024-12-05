@@ -21,8 +21,27 @@
             <span>Shows: <%= totalShows %></span>
           </div>
         </div>
-        <span class="spacer-2"></span>
+        <span class="spacer-1"></span>
       </div>
+
+      <div class="content">
+        <div id="fetcher-status"></div>
+        <div class="fetchers">
+          <div class="fetcher" data-service="test-fetch" data-query="2000" data-name="Hot Dogs">
+            <button class="fetcher-start"><%- include('../partials/svg/fetch'); %></button>
+          </div>
+          <div class="fetcher" data-service="test-fetch" data-query="5000" data-name="Hamburgers">
+            <button class="fetcher-start"><%- include('../partials/svg/fetch'); %></button>
+          </div>
+          <div class="fetcher" data-service="test-fetch" data-query="10000" data-name="Baloons">
+            <button class="fetcher-start"><%- include('../partials/svg/fetch'); %></button>
+          </div>
+          <div class="fetcher" data-service="test-fetch" data-query="error" data-name="Oopsie Whoopsie">
+            <button class="fetcher-start"><%- include('../partials/svg/fetch'); %></button>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
