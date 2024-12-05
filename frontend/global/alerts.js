@@ -9,8 +9,6 @@ const alertTopOffset = 4.25; //em
 function shiftAlerts() {
   const alerts = alertContainer.querySelectorAll('.alert');
   for (let i = 0; i < alerts.length; i++) {
-    const topVal = window.getComputedStyle(alerts[i]).getPropertyValue('top');
-    const topNum = parseInt(topVal.replace('px', '')) / 16; //em value
     alerts[i].style.top = `${i * alertTopOffset}em`;
   }
 }

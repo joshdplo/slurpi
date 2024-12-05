@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url';
 import path from 'node:path';
 import fs from 'node:fs';
+import { format } from 'path';
 
 /**
  * Path Helpers
@@ -26,13 +27,19 @@ export function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
+export function formatNumber(num) {
+  return num.toLocaleString("en-US");
+}
+
 /**
  * Meta
  */
 export async function getDBSize() {
   try {
     const stats = fs.statSync(process.env.DB_URL);
-    return formatBytes(stats.size);
+    let formatted = formatBytes(stats.size);
+    formatted = formatted.replace(' ', '');
+    return formatted;
   } catch (error) {
     console.error('Error getting DB File Size', error);
     return '0b';

@@ -75,6 +75,9 @@
   animation-timing-function: cubic-bezier(1, 0, 1, 0);
 }
 
+/**
+ * Loader Animations
+ */
 @keyframes loader-before {
 
   0%,

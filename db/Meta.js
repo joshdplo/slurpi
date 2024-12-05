@@ -8,7 +8,38 @@ const Meta = sequelize.define('Meta', {
     allowNull: false,
     defaultValue: process.env.NAME
   },
-
+  totalApiCalls: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalDBWrites: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalMovies: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  ratedMovies: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalShows: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  ratedShows: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalSteamGames: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalRecentSteamGames: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
 }, { timestamps: true });
 
 export default Meta;

@@ -63,19 +63,6 @@
   background-color: var(--c-status-error);
 }
 
-#global-alerts .alert::before {
-  content: "💡";
-  margin-right: .5rem;
-}
-
-#global-alerts .alert.error::before {
-  content: "❌";
-}
-
 #global-alerts .alert.success {
   background-color: var(--c-status-success);
-}
-
-#global-alerts .alert.success::before {
-  content: "✔️";
 }

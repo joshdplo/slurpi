@@ -2,10 +2,12 @@ import 'dotenv/config';
 import express from 'express';
 import session from 'express-session';
 
+import './db/db.js';
 import './wss.js';
 import routes from './routes.js';
 import initAppData from './middlewares/initAppMiddleware.js';
 import { alertMiddleware } from './middlewares/alertMiddleware.js';
+import metaMiddleware from './middlewares/metaMiddleware.js';
 
 const app = express();
 
@@ -30,6 +32,7 @@ if (process.env.DEBUG === 'true') {
 
 // Custom Middlewares
 initAppData(app);
+app.use(metaMiddleware);
 app.use(alertMiddleware);
 
 // Views
