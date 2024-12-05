@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
 
-const Game = sequelize.define('Game', {
+const SteamGame = sequelize.define('SteamGame', {
   appId: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -56,4 +56,4 @@ const Game = sequelize.define('Game', {
   },
 }, { timestamps: true });
 
-export default Game;
+export default SteamGame;

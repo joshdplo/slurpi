@@ -1,10 +1,13 @@
 import { addAlert } from '../middlewares/alertMiddleware.js';
 
-export const pageIndex = async (req, res) => {
+/**
+ * Dashboard
+ */
+export const pageDashboard = async (req, res) => {
   try {
-    addAlert(req, 'Testing the alert', 'success');
+    addAlert(req, 'The Dashboard Works', 'success');
 
-    res.render('pages/index', {
+    res.render('pages/dashboard', {
       title: 'Dashboard'
     });
   } catch (error) {

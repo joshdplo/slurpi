@@ -12,9 +12,17 @@ export default async function metaMiddleware(req, res, next) {
       meta = await Meta.create(); // everything in meta schema has default values
     }
 
+    // Get Total Items
+    const trackedTotals = ['totalMovies', 'totalShows', 'totalSteamGames'];
+    let totalItems = 0;
+    for (let i of Object.keys(meta.dataValues)) {
+      if (trackedTotals.indexOf(i) > -1) totalItems += meta.dataValues[i];
+    }
+
     // Set Locals
     res.locals.totalApiCalls = formatNumber(meta.totalApiCalls);
     res.locals.totalDBWrites = formatNumber(meta.totalDBWrites);
+    res.locals.totalItems = formatNumber(totalItems);
     res.locals.totalMovies = formatNumber(meta.totalMovies);
     res.locals.ratedMovies = formatNumber(meta.ratedMovies);
     res.locals.totalShows = formatNumber(meta.totalShows);

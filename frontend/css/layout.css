@@ -23,6 +23,42 @@
 }
 
 /**
+ * Page Banners
+ */
+.page-banner {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--site-padding);
+}
+
+.page-banner .left {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.page-banner svg {
+  height: 4rem;
+}
+
+.page-banner h1 {
+  padding: 0;
+}
+
+.page-banner .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: .4rem;
+  font-size: .9rem;
+}
+
+/**
  * Alerts
  */
 #global-alerts {

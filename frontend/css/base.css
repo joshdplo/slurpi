@@ -92,7 +92,8 @@ small {
   font-size: var(--font-size-small);
 }
 
-p+p {
+p+p,
+pre+p {
   margin-top: 1.5rem;
 }
 

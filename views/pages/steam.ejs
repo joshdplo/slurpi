@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <div class="wrapper-default contain">
+    <%- include ('../partials/sidebar') %>
+
+    <main id="content">
+      <div class="content flex-center">
+        <div class="page-banner">
+          <div class="left">
+            <%- include('../partials/svg/steam'); %>
+            <h1>Steam</h1>
+          </div>
+          <div class="right">
+            <span>Games: <%= totalSteamGames %></span>
+            <span>Recently Played: <%= totalRecentSteamGames %></span>
+          </div>
+        </div>
+        <span class="spacer-2"></span>
+      </div>
+    </main>
+  </div>
+
+  <div id="global-alerts"></div>
+  <%- include ('../partials/end') %>
+</body>
+
+</html>
