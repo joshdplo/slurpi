@@ -9,7 +9,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     <% messages.forEach((message) => { %>
-    window._UTIL.showGlobalMessage('<%= message.text %>', '<%= message.type %>');
+    document.dispatchEvent(new CustomEvent('alert', { detail: { type: '<%= message.type %>', message: '<%= message.text %>' } }));
     <% }) %>
   });
 </script>

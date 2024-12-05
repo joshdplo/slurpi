@@ -5,7 +5,7 @@ import session from 'express-session';
 import './wss.js';
 import routes from './routes.js';
 import initAppData from './middlewares/initAppMiddleware.js';
-import { messageMiddleware } from './middlewares/globalMessageMiddleware.js';
+import { alertMiddleware } from './middlewares/alertMiddleware.js';
 
 const app = express();
 
@@ -30,7 +30,7 @@ if (process.env.DEBUG === 'true') {
 
 // Custom Middlewares
 initAppData(app);
-app.use(messageMiddleware);
+app.use(alertMiddleware);
 
 // Views
 app.set('view engine', 'ejs');

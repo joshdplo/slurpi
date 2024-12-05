@@ -1,3 +1,5 @@
+import { sendEvent } from "../fe-util.js";
+
 const port = __WS_PORT__;
 const socket = new WebSocket(`ws://localhost:${port}`);
 
@@ -19,4 +21,5 @@ socket.addEventListener("close", (event) => {
 // Message
 socket.addEventListener("message", (event) => {
   console.log("[ws] Server Message:", event.data);
+  sendEvent('ws', event.data);
 });

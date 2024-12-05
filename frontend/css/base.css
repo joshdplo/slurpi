@@ -13,8 +13,9 @@
   --c-secondary: #0ff;
   --c-accent: #ff0;
 
-  --c-success: #0f0;
-  --c-error: #f00;
+  --c-status-info: #FFFFB8;
+  --c-status-success: #B3FFB3;
+  --c-status-error: #FF9999;
 
   /* Dimensions */
   --site-padding: 1rem;

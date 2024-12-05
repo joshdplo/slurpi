@@ -37,6 +37,7 @@
 #sidebar .top ul a {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 #sidebar .top ul a::after {
