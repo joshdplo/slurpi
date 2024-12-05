@@ -7,7 +7,7 @@ import { WebSocketServer } from 'ws';
 const wss = new WebSocketServer({ port: process.env.WS_PORT });
 wss.on('connection', function connection(ws) {
   // Send connection confirmation to client
-  ws.send(JSON.stringify({ message: 'Connected' }));
+  ws.send(JSON.stringify({ connected: true }));
 
   // On Client send 'message'
   ws.on('message', function message(data) {
