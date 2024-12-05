@@ -1,8 +1,5 @@
 // Base Styles
-import './css/reset.css';
-import './css/base.css';
-import './css/layout.css';
-import './css/loader.css';
+import './css/_css.js';
 
 // JS & Components
 import './global/alerts.js';

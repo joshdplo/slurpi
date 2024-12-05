@@ -38,7 +38,7 @@
 .page-banner .left {
   display: flex;
   align-items: center;
-  gap: .6rem;
+  gap: 1rem;
 }
 
 .page-banner svg {
@@ -47,6 +47,7 @@
 
 .page-banner h1 {
   padding: 0;
+  width: auto;
 }
 
 .page-banner .right {
@@ -56,49 +57,4 @@
   align-items: flex-end;
   gap: .4rem;
   font-size: .9rem;
-}
-
-/**
- * Alerts
- */
-#global-alerts {
-  position: fixed;
-  display: flex;
-  top: 1rem;
-  right: 2rem;
-  width: 100%;
-  flex-direction: column;
-  gap: .5rem;
-  z-index: 10;
-}
-
-#global-alerts .alert {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin-left: auto;
-  padding: 1.25rem 2.5rem;
-  font-size: 1rem;
-  color: var(--c-black);
-  background-color: var(--c-status-info);
-  box-shadow: 0px 6px 10px -3px rgba(0, 0, 0, 0.4);
-  border-radius: .5rem;
-  border-top-right-radius: 0;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateX(110%);
-  transition: transform .25s ease, opacity .3s ease, top .2s ease;
-}
-
-#global-alerts .alert.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-#global-alerts .alert.error {
-  background-color: var(--c-status-error);
-}
-
-#global-alerts .alert.success {
-  background-color: var(--c-status-success);
 }
