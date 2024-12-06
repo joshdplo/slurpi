@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <div class="wrapper-default contain">
+    <%- include ('../partials/sidebar') %>
+
+    <main id="content">
+      <div class="content flex-center">
+        <div class="page-banner">
+          <div class="left">
+            <h1>Test Page</h1>
+          </div>
+          <div class="right">
+            <span>You can test here</span>
+          </div>
+        </div>
+        <span class="spacer-1"></span>
+      </div>
+
+      <div class="content">
+        <div id="fetcher-status"></div>
+        <div class="fetchers">
+          <div class="fetcher" data-service="test-fetch" data-query="2000" data-name="Hot Dogs (2sec)"></div>
+          <div class="fetcher" data-service="test-fetch" data-query="5000" data-name="Hamburgers (5sec)"></div>
+          <div class="fetcher" data-service="test-fetch" data-query="10000" data-name="Baloons (10sec)"></div>
+          <div class="fetcher" data-service="test-fetch" data-query="20000" data-name="Confetti (20sec)"></div>
+          <div class="fetcher" data-service="test-fetch" data-query="30000" data-name="Clowns (30sec)"></div>
+          <div class="fetcher" data-service="test-fetch" data-query="error" data-name="Party Pooper (429 error)">
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="global-alerts"></div>
+  <%- include ('../partials/end') %>
+</body>
+
+</html>

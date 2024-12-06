@@ -1,6 +1,7 @@
 import express from "express";
 import {
   pageDashboard,
+  pageTest,
   apiTestFetch
 } from './controllers/defaultController.js';
 import {
@@ -18,6 +19,7 @@ const router = express.Router();
  * Pages
  */
 router.get('/', pageDashboard);
+router.get('/test', pageTest);
 router.get('/tmdb', pageTMDB);
 router.get('/steam', pageSteam);
 router.get('/spotify', pageSpotify);

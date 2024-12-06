@@ -5,6 +5,7 @@
 .has-loader {
   position: relative;
   z-index: -1;
+  pointer-events: none;
 }
 
 .loader-wrapper {
@@ -18,7 +19,7 @@
   justify-content: center;
   align-items: center;
   font-family: var(--ff-title);
-  font-size: 2rem;
+  font-size: 1.25rem;
   color: var(--c-white);
   background-color: var(--c-dark);
   transform-origin: center left;
@@ -27,11 +28,30 @@
   pointer-events: none;
 }
 
+.loader-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: rgba(255, 255, 255, .035);
+  transition: width .75s ease;
+}
+
 .loader-text {
-  margin: 0 0 1rem;
+  margin: 0 0 .35rem;
   opacity: 0;
   transform: scaleY(0);
   transition: transform .35s ease, opacity .35s ease-in-out;
+}
+
+.loader-text span {
+  display: block;
+  text-align: center;
+  font-size: .8rem;
+  font-weight: bold;
+  margin: .6rem 0 .15rem;
+  opacity: .9;
 }
 
 .loader {

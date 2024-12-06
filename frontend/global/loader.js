@@ -1,15 +1,21 @@
 const animationDuration = 300;
+const progressAnimationDuration = 800;
 
-function addLoader(element, text) {
+function addLoader(element, text = 'Loading') {
   const wrapper = document.createElement('div');
   wrapper.classList.add('loader-wrapper');
 
-  if (text) {
-    const textEl = document.createElement('div');
-    textEl.classList.add('loader-text');
-    textEl.innerText = text;
-    wrapper.appendChild(textEl);
-  }
+  const progressBar = document.createElement('div');
+  progressBar.classList.add('loader-progress');
+  wrapper.appendChild(progressBar);
+
+  const textEl = document.createElement('div');
+  textEl.classList.add('loader-text');
+  textEl.innerText = text;
+
+  const textUpdateEl = document.createElement('span');
+  textEl.appendChild(textUpdateEl);
+  wrapper.appendChild(textEl);
 
   const loader = document.createElement('div');
   loader.classList.add('loader');
@@ -25,16 +31,20 @@ function addLoader(element, text) {
 }
 
 function removeLoader(element, existingLoader) {
-  existingLoader.classList.remove('active');
-  const t = setTimeout(() => {
-    existingLoader.remove();
-    element.classList.remove('has-loader');
-    clearTimeout(t);
-  }, animationDuration);
+  const tt = setTimeout(() => {
+    existingLoader.classList.remove('active');
+    clearTimeout(tt);
+
+    const t = setTimeout(() => {
+      existingLoader.remove();
+      element.classList.remove('has-loader');
+      clearTimeout(t);
+    }, animationDuration);
+  }, progressAnimationDuration);
 }
 
 function onLoaderEvent(e) {
-  const { element, text, textUpdate } = e.detail;
+  const { element, text, textUpdate, complete, progress } = e.detail;
 
   if (!element) {
     console.warn('No element provided to loader');
@@ -42,9 +52,20 @@ function onLoaderEvent(e) {
   }
 
   const existingLoader = element.querySelector('.loader-wrapper');
+
+  if (existingLoader && progress) {
+    const progressBar = existingLoader.querySelector('.loader-progress');
+    progressBar.style.width = `${progress}%`;
+  }
+
   if (existingLoader && textUpdate) {
-    const textEl = existingLoader.querySelector('.loader-text');
-    textEl.innerText = textUpdate;
+    const textUpdateEl = existingLoader.querySelector('.loader-text span');
+    textUpdateEl.innerText = textUpdate;
+    return;
+  }
+
+  if (existingLoader && complete) {
+    removeLoader(element, existingLoader);
     return;
   }
 

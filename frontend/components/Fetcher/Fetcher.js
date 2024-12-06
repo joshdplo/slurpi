@@ -52,7 +52,6 @@ export default function Fetcher(element) {
     sendEvent('loader', { element, text: `Fetching ${fetcherName}` });
     isFetching = status === true;
     fetchStartButton.disabled = status === true;
-
   }
 
   async function fetchData() {
@@ -61,15 +60,15 @@ export default function Fetcher(element) {
     try {
       const response = await fetch(url);
       if (response.status !== 200) {
-        showAlert(`${fetcherName} fetch failed`, 'error');
+        showAlert(`${fetcherName} failed`, 'error');
       } else {
-        showAlert(`${fetcherName} fetch finished successfully!`, 'success');
+        showAlert(`${fetcherName} finished successfully!`, 'success');
         return response.json();
       }
     } catch (error) {
       console.error('Error in Fetcher component fetchData()', error);
       sendEvent('loader', { element });
-      showAlert(`${fetcherName} fetch failed`, 'error');
+      showAlert(`${fetcherName} failed`, 'error');
     } finally {
       isFetching = false;
       toggleLoader();
@@ -79,6 +78,7 @@ export default function Fetcher(element) {
   async function onFetchClick() {
     if (isFetching) return;
 
+    showAlert(`${fetcherName} starting`);
     const data = await fetchData();
     if (data) {
       console.log(data);
@@ -87,7 +87,8 @@ export default function Fetcher(element) {
 
   function onWSEvent(e) {
     const ws = e.detail;
-    if (ws.fetch && ws.fetch === url) {
+    if (ws.fetch && ws.fetch === url && ws.message) {
+      sendEvent('loader', { element, textUpdate: ws.message, complete: ws.complete || false, progress: ws.progress || null });
     }
   }
 

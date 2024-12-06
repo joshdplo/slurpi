@@ -9,7 +9,7 @@ export const pageDashboard = async (req, res) => {
     addAlert(req, 'The Dashboard Works', 'success');
 
     res.render('pages/dashboard', {
-      title: 'Dashboard'
+      title: 'Dashboard',
     });
   } catch (error) {
     console.error(error.message);
@@ -19,33 +19,54 @@ export const pageDashboard = async (req, res) => {
 };
 
 /**
- * Test Fetch
+ * Test Fetches
  */
+export const pageTest = (req, res) => {
+  res.render('pages/test', {
+    title: 'Test',
+    descripton: 'API Test Page',
+  })
+};
+
 export const apiTestFetch = async (req, res, next) => {
   const delay = req.params?.delay ? parseInt(req.params.delay, 10) : 0;
   const testError = req.params?.delay === 'error';
 
   if (testError) {
-
     sendMessage({
       fetch: req.path,
       error: true,
-      complete: true,
-      message: `Error fetching ${req.path}`
+      message: `Error fetching ${req.path}`,
     });
     const err = new Error('test error in apiTestFetch controller');
-    err.status = 400;
-    next(err);
-  } else {
+    err.status = 429;
+    return next(err);
+  }
+
+  let progress = 1;
+  const i = setInterval(() => {
     sendMessage({
       fetch: req.path,
       error: false,
       complete: false,
-      message: 'API Fetch Started'
+      progress: Math.floor((progress / (delay / 1000)) * 100),
+      message: `${progress}/${delay / 1000}`,
     });
-    const t = setTimeout(() => {
-      res.json({ success: true, t: Date.now() });
-    }, delay);
-  }
 
+    progress++;
+  }, 1000);
+
+  const t = setTimeout(() => {
+    res.json({ success: true, t: Date.now() });
+
+    sendMessage({
+      fetch: req.path,
+      error: false,
+      complete: true,
+      progress: 100,
+      message: `${progress}/${progress}`,
+    });
+    clearInterval(i);
+    clearTimeout(t);
+  }, delay);
 };
