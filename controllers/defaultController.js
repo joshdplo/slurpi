@@ -6,8 +6,6 @@ import { sendMessage } from '../wss.js';
  */
 export const pageDashboard = async (req, res) => {
   try {
-    addAlert(req, 'The Dashboard Works', 'success');
-
     res.render('pages/dashboard', {
       title: 'Dashboard',
     });

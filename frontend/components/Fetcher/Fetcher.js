@@ -62,8 +62,14 @@ export default function Fetcher(element) {
       if (response.status !== 200) {
         showAlert(`${fetcherName} failed`, 'error');
       } else {
-        showAlert(`${fetcherName} finished successfully!`, 'success');
-        return response.json();
+        const json = await response.json();
+
+        if (json.error) {
+          showAlert(`${fetcherName} error: ${json.error}`, 'error');
+        } else {
+          showAlert(`${fetcherName} finished successfully!`, 'success');
+        }
+        return json;
       }
     } catch (error) {
       console.error('Error in Fetcher component fetchData()', error);
@@ -78,7 +84,6 @@ export default function Fetcher(element) {
   async function onFetchClick() {
     if (isFetching) return;
 
-    showAlert(`${fetcherName} starting`);
     const data = await fetchData();
     if (data) {
       console.log(data);

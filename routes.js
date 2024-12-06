@@ -5,7 +5,8 @@ import {
   apiTestFetch
 } from './controllers/defaultController.js';
 import {
-  pageTMDB
+  pageTMDB,
+  getTMDBData
 } from './controllers/tmdbController.js';
 import {
   pageSteam
@@ -27,7 +28,11 @@ router.get('/spotify', pageSpotify);
 /**
  * API
  */
+// Generic
 router.get('/api/status', (req, res) => res.json({ success: true, t: Date.now() }));
 router.get(['/api/test-fetch', '/api/test-fetch/:delay'], apiTestFetch);
+
+// TMDB
+router.get('/api/tmdb/:category/:subcategory', getTMDBData);
 
 export default router;

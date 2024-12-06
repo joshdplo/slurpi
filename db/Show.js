@@ -4,7 +4,7 @@ import sequelize from './db.js';
 const Show = sequelize.define('Show', {
   adult: {
     type: DataTypes.BOOLEAN,
-    allowNull: false
+    defaultValue: false
   },
   genre_ids: {
     type: DataTypes.JSON,

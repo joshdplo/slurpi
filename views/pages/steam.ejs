@@ -10,6 +10,7 @@
     <%- include ('../partials/sidebar') %>
 
     <main id="content">
+
       <div class="content flex-center">
         <div class="page-banner">
           <div class="left">
@@ -23,6 +24,15 @@
         </div>
         <span class="spacer-2"></span>
       </div>
+
+      <div class="content">
+        <div class="fetchers">
+          <div class="fetcher" data-service="steam" data-query="games" data-name="Owned Games"></div>
+          <div class="fetcher" data-service="steam" data-query="games-recent" data-name="Recently Played"></div>
+          <div class="fetcher" data-service="steam" data-query="games" data-name="Owned Games Details"></div>
+        </div>
+      </div>
+
     </main>
   </div>
 

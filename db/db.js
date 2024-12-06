@@ -4,7 +4,8 @@ import { join } from '../be-util.js';
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: join(process.env.DB_URL)
+  storage: join(process.env.DB_URL),
+  // logging: false
 });
 
 // Confirm connection

@@ -4,32 +4,33 @@ import sequelize from './db.js';
 const Movie = sequelize.define('Movie', {
   adult: {
     type: DataTypes.BOOLEAN,
-    allowNull: false
+    defaultValue: false
   },
   genre_ids: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+    unique: true
   },
   original_language: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   overview: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   poster_path: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   release_date: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   title: {
     type: DataTypes.STRING,
@@ -37,7 +38,7 @@ const Movie = sequelize.define('Movie', {
   },
   rating: {
     type: DataTypes.INTEGER,
-    allowNull: true
+    allowNull: true,
   }
 }, { timestamps: true });
 
