@@ -20,6 +20,7 @@ socket.addEventListener("close", (event) => {
 
 // Message
 socket.addEventListener("message", (event) => {
-  console.log("[ws] Server Message:", event.data);
-  sendEvent('ws', event.data);
+  const data = JSON.parse(event.data);
+  console.log("[ws] Server Message:", data);
+  sendEvent('ws', data);
 });

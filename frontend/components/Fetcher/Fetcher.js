@@ -9,21 +9,7 @@ export default function Fetcher(element) {
     return;
   }
 
-  // Check for fetcher status container element
-  const statusContainer = document.querySelector('#fetcher-status');
-  if (!statusContainer) {
-    console.warn('No #fetcher-status found on the page\n', element);
-    return;
-  }
-
-  // Check for fetch start button
-  const fetchStartButton = element.querySelector('button.fetcher-start');
-  if (!fetchStartButton) {
-    console.warn('No button.fetcher-start found in the Fetcher component\n', element);
-    return;
-  }
-
-  // Get fetcher service and query
+  // Get fetcher data attributes
   const fetcherService = element.getAttribute('data-service');
   const fetcherQuery = element.getAttribute('data-query');
   const fetcherName = element.getAttribute('data-name');
@@ -32,6 +18,36 @@ export default function Fetcher(element) {
     return;
   }
 
+  /**
+   * Fetcher DOM Creation
+   */
+  const url = `/api/${fetcherService}/${fetcherQuery}`;
+
+  const fetchStartButton = document.createElement('button');
+  const fetchButtonSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 10h4l-7 8-7-8h4v-10h6v10zm6 9v5h-18v-5h18zm-6 2h-1v1h1v-1zm2 0h-1v1h1v-1zm2 0h-1v1h1v-1z" /></svg>';
+  fetchStartButton.innerHTML = fetchButtonSvg;
+
+  const fetchDetailsDiv = document.createElement('div');
+  fetchDetailsDiv.classList.add('details');
+
+  const fetchNameSpan = document.createElement('span');
+  fetchNameSpan.classList.add('name');
+  fetchNameSpan.innerText = fetcherName;
+  fetchDetailsDiv.appendChild(fetchNameSpan);
+
+  const fetchUrlSpan = document.createElement('span');
+  fetchUrlSpan.classList.add('url');
+  fetchUrlSpan.innerText = url;
+  fetchDetailsDiv.appendChild(fetchUrlSpan);
+
+  element.appendChild(fetchStartButton);
+  element.appendChild(fetchDetailsDiv);
+
+  /**
+   * Fetcher Logic
+   */
+  let isFetching = false;
+
   function toggleLoader(status) {
     sendEvent('loader', { element, text: `Fetching ${fetcherName}` });
     isFetching = status === true;
@@ -39,10 +55,7 @@ export default function Fetcher(element) {
 
   }
 
-  let isFetching = false;
   async function fetchData() {
-    const url = `/api/${fetcherService}/${fetcherQuery}`;
-
     toggleLoader(true);
 
     try {
@@ -72,8 +85,15 @@ export default function Fetcher(element) {
     }
   }
 
+  function onWSEvent(e) {
+    const ws = e.detail;
+    if (ws.fetch && ws.fetch === url) {
+    }
+  }
+
   function init() {
     fetchStartButton.addEventListener('click', onFetchClick);
+    document.addEventListener('ws', onWSEvent);
   }
 
   init();

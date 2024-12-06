@@ -34,7 +34,7 @@ function removeLoader(element, existingLoader) {
 }
 
 function onLoaderEvent(e) {
-  const { element, text } = e.detail;
+  const { element, text, textUpdate } = e.detail;
 
   if (!element) {
     console.warn('No element provided to loader');
@@ -42,7 +42,13 @@ function onLoaderEvent(e) {
   }
 
   const existingLoader = element.querySelector('.loader-wrapper');
-  if (existingLoader) {
+  if (existingLoader && textUpdate) {
+    const textEl = existingLoader.querySelector('.loader-text');
+    textEl.innerText = textUpdate;
+    return;
+  }
+
+  if (existingLoader && !textUpdate) {
     removeLoader(element, existingLoader);
     return;
   }
