@@ -2,18 +2,22 @@ import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
 
 const SteamGame = sequelize.define('SteamGame', {
-  appId: {
+  appid: {
     type: DataTypes.INTEGER,
     allowNull: false,
     unique: true
   },
-  recentlyPlayed: {
+  recent: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  playtime_forever: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   isFree: {
     type: DataTypes.BOOLEAN,

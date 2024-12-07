@@ -28,14 +28,12 @@ export async function pageSteam(req, res, next) {
  */
 const apiKey = process.env.STEAM_API_KEY;
 const steamId64 = process.env.STEAM_ID_64;
-
+const validCats = ['games', 'recentgames', 'gamedetails'];
 const urls = {
   games: `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId64}`,
   recentgames: `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${apiKey}&steamid=${steamId64}`,
   gamedetails: (appId) => `https://store.steampowered.com/api/appdetails/?key=${apiKey}&appids=${appId}`,
 }
-
-const validCats = ['games', 'recentgames', 'gamedetails'];
 
 // Steam Fetch Helper
 async function steamFetch(path) {
@@ -56,15 +54,38 @@ async function steamFetch(path) {
 // Get Steam Data
 export const getSteamData = async (req, res) => {
   const cat = req.params.category;
+  const force = req.query?.force;
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+  const fetchUrl = urls[cat];
 
   try {
     if (cat !== 'gamedetails') {
+      // Standard categories
+      const fetchedData = await steamFetch(fetchUrl);
+      let numResults = 0;
+      fetchedData.result.games.forEach(async game => {
+        await SteamGame.findOrCreate({ where: { appid: game.appid } });
+        numResults++;
+      });
 
+      if (cat === 'recentgames') {
+        const allDbGames = await SteamGame.findAll();
+        allDbGames.forEach(async game => {
+          //@TODO: LEFT OFF HERE
+        });
+      }
+
+      return res.json({ success: true, items: numResults, t: Date.now() });
     } else {
       // Game details monster request
       const dbGames = await SteamGame.findAll();
-      if (dbGames.length === 0) return res.json({ error: 'No games found - fetch games before fetching game details', t: Date.now() });
+      if (dbGames.length === 0) return res.json({ error: 'No games found - can\'t fetch details', t: Date.now() });
+
+      dbGames.forEach(game => {
+        // if game already has details, we will skip it!
+        // @TODO: implement force
+
+      });
     }
   } catch (error) {
     console.error(error);

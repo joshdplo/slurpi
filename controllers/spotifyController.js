@@ -14,8 +14,35 @@ export async function pageSpotify(req, res, next) {
 }
 
 /**
- * Spotify Auth Callback
+ * Spotify Auth
  */
+const scopes = ['user-library-read', 'user-top-read', 'user-follow-read'];
 export async function pageSpotifyAuth(req, res) {
   res.json({ placeholder: true });
+};
+
+/**
+ * Spotify API
+ */
+const validCats = ['tracks', 'albums', 'shows', 'artists', 'toptracks'];
+const baseUrl = 'https://api.spotify.com/v1/me';
+const catUrls = {
+  tracks: '/tracks?offset=0&limit=50', // saved tracks @ user-library-read
+  albums: '/albums?offset=0&limit=50', // saved albums @ user-library-read
+  shows: '/shows?offset=0&limit=50', // saved shows (podcasts) @ user-library-read
+  artists: '/following?type=artist&limit=50', // user followed artists @ user-follow-read
+  toptracks: '/top/tracks?limit=10&time_range=long_term' // top tracks @ user-top-read
+};
+
+export async function getSpotifyData(req, res) {
+  const cat = req.params.category;
+  if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+  const fetchUrl = `${baseUrl}${catUrls[cat]}`;
+
+  try {
+
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
 };
