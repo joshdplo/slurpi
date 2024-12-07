@@ -62,17 +62,26 @@ export const getSteamData = async (req, res) => {
     if (cat !== 'gamedetails') {
       // Standard categories
       const fetchedData = await steamFetch(fetchUrl);
+      const fetchedGames = fetchedData.response.games;
+
       let numResults = 0;
-      fetchedData.result.games.forEach(async game => {
-        await SteamGame.findOrCreate({ where: { appid: game.appid } });
+      for (let i = 0; i < fetchedGames.length; i++) {
+        const dbGame = await SteamGame.findOne({ where: { appid: fetchedGames[i].appid } });
+        if (dbGame) {
+          await dbGame.update(fetchedGames[i]);
+        } else {
+          await SteamGame.create(fetchedGames[i]);
+        }
+
         numResults++;
-      });
+      }
 
       if (cat === 'recentgames') {
         const allDbGames = await SteamGame.findAll();
-        allDbGames.forEach(async game => {
-          //@TODO: LEFT OFF HERE
-        });
+        for (let i = 0; i < allDbGames.length; i++) {
+          const isRecent = fetchedGames.find(f => f.appid === allDbGames[i].appid) !== undefined;
+          await allDbGames[i].update({ recent: isRecent });
+        }
       }
 
       return res.json({ success: true, items: numResults, t: Date.now() });
@@ -81,11 +90,37 @@ export const getSteamData = async (req, res) => {
       const dbGames = await SteamGame.findAll();
       if (dbGames.length === 0) return res.json({ error: 'No games found - can\'t fetch details', t: Date.now() });
 
-      dbGames.forEach(game => {
-        // if game already has details, we will skip it!
-        // @TODO: implement force
+      for (i = 0; i < dbGames.length; i++) {
+        const progress = Math.floor(((i + 1) / (dbGames.length + 1)) * 100);
+        const message = `Game ${i + 1}/${dbGames.length + 1}`;
 
-      });
+        if (!force && dbGames[i].capsule_image) {
+          // already has details
+          console.log(`Already have details for ${dbGames[i].name}`);
+          sendMessage({
+            fetch: req.path,
+            error: false,
+            complete: false,
+            progress,
+            message,
+          });
+        } else {
+          const fetchUrl = urls[cat](dbGames[i].appid);
+          const fetchedGameRaw = await steamFetch(fetchUrl);
+          const fetchedGame = fetchedGameRaw[dbGames[i].appid].data;
+
+          if (fetchedGame.name) {
+            await dbGames[i].update(fetchedGame);
+          } else {
+            console.log(`Appid ${dbGames[i].appid} is empty - consider removing it from your library!`);
+          }
+        }
+
+        // Delay to (hopefully) not get immediately rate-limited
+        await sleep();
+      }
+
+      return res.json({ success: true, items: dbGames.length, t: Date.now() });
     }
   } catch (error) {
     console.error(error);

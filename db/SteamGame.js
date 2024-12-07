@@ -19,11 +19,11 @@ const SteamGame = sequelize.define('SteamGame', {
     type: DataTypes.STRING,
     allowNull: true
   },
-  isFree: {
+  is_free: {
     type: DataTypes.BOOLEAN,
     allowNull: true
   },
-  description: {
+  short_description: {
     type: DataTypes.STRING,
     allowNull: true
   },
@@ -31,7 +31,11 @@ const SteamGame = sequelize.define('SteamGame', {
     type: DataTypes.STRING,
     allowNull: true
   },
-  headerImage: {
+  header_image: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  capsule_image: {
     type: DataTypes.STRING,
     allowNull: true
   },
@@ -55,8 +59,8 @@ const SteamGame = sequelize.define('SteamGame', {
     type: DataTypes.JSON,
     allowNull: true
   },
-  released: {
-    type: DataTypes.STRING,
+  release_date: {
+    type: DataTypes.JSON,
     allowNull: true
   },
 }, { timestamps: true });
