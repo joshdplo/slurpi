@@ -72,7 +72,6 @@ async function tmdbFetch(path) {
 export async function getTMDBData(req, res) {
   const cat = req.params.category;
   const subcat = req.params.subcategory;
-
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
   if (validSubcats.indexOf(subcat) === -1) return res.json({ error: `Invalid subcategory: ${subcat}` });
 
@@ -140,6 +139,6 @@ export async function getTMDBData(req, res) {
     }
   } catch (error) {
     console.error(error);
-    res.json({ error, t: Date.now() })
+    res.json({ error, t: Date.now() });
   }
 }

@@ -9,7 +9,8 @@ import {
   getTMDBData
 } from './controllers/tmdbController.js';
 import {
-  pageSteam
+  pageSteam,
+  getSteamData
 } from './controllers/steamController.js';
 import {
   pageSpotify
@@ -34,5 +35,8 @@ router.get(['/api/test-fetch', '/api/test-fetch/:delay'], apiTestFetch);
 
 // TMDB
 router.get('/api/tmdb/:category/:subcategory', getTMDBData);
+
+// Steam
+router.get('/api/steam/:category', getSteamData);
 
 export default router;

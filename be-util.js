@@ -14,6 +14,7 @@ export const resolve = (str) => path.resolve(__dirname, str);
 /**
  * Formatting
  */
+// Format bytes into readable string
 export function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes';
 
@@ -26,13 +27,28 @@ export function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
+// Format number into readable string
 export function formatNumber(num) {
   return num.toLocaleString("en-US");
 }
 
 /**
+ * API Utils
+ */
+// Sleep timeout for API rate limiting
+export function sleep(ms = 2000) {
+  return new Promise((resolve, reject) => {
+    let t = setTimeout(() => {
+      clearTimeout(t);
+      resolve();
+    }, ms);
+  });
+}
+
+/**
  * Meta
  */
+// Get database size
 export async function getDBSize() {
   try {
     const stats = fs.statSync(process.env.DB_URL);

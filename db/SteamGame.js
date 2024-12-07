@@ -4,7 +4,8 @@ import sequelize from './db.js';
 const SteamGame = sequelize.define('SteamGame', {
   appId: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   recentlyPlayed: {
     type: DataTypes.BOOLEAN,
@@ -20,7 +21,7 @@ const SteamGame = sequelize.define('SteamGame', {
   },
   description: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   website: {
     type: DataTypes.STRING,
@@ -40,11 +41,11 @@ const SteamGame = sequelize.define('SteamGame', {
   },
   platforms: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   categories: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: true
   },
   genres: {
     type: DataTypes.JSON,
@@ -52,7 +53,7 @@ const SteamGame = sequelize.define('SteamGame', {
   },
   released: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
 }, { timestamps: true });
 
