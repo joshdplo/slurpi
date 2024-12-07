@@ -33,6 +33,21 @@
         </div>
       </div>
 
+      <div class="content">
+        <div class="data-list">
+          <h2>Movies</h2>
+          <% movies.forEach(i => { %>
+          <span class="data-movie"><%= i.title %></span>
+          <% }) %>
+        </div>
+        <div class="data-list">
+          <h2>Shows</h2>
+          <% shows.forEach(i => { %>
+          <span class="data-show"><%= i.name %></span>
+          <% }) %>
+        </div>
+      </div>
+
     </main>
   </div>
 

@@ -2,6 +2,11 @@ import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
 
 const SteamGame = sequelize.define('SteamGame', {
+  invalid: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
   appid: {
     type: DataTypes.INTEGER,
     allowNull: false,

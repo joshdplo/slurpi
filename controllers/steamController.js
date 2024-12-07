@@ -90,34 +90,42 @@ export const getSteamData = async (req, res) => {
       const dbGames = await SteamGame.findAll();
       if (dbGames.length === 0) return res.json({ error: 'No games found - can\'t fetch details', t: Date.now() });
 
-      for (i = 0; i < dbGames.length; i++) {
+      for (let i = 0; i < dbGames.length; i++) {
         const progress = Math.floor(((i + 1) / (dbGames.length + 1)) * 100);
         const message = `Game ${i + 1}/${dbGames.length + 1}`;
+
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress,
+          message,
+        });
 
         if (!force && dbGames[i].capsule_image) {
           // already has details
           console.log(`Already have details for ${dbGames[i].name}`);
-          sendMessage({
-            fetch: req.path,
-            error: false,
-            complete: false,
-            progress,
-            message,
-          });
+        } else if (!force && dbGames[i].invalid) {
+          // game is invalid, skip it
+          console.log(`Appid ${dbGames[i].appid} is invalid - skipping`);
         } else {
+          // needs details
           const fetchUrl = urls[cat](dbGames[i].appid);
           const fetchedGameRaw = await steamFetch(fetchUrl);
           const fetchedGame = fetchedGameRaw[dbGames[i].appid].data;
 
-          if (fetchedGame.name) {
+          if (fetchedGame?.name) {
             await dbGames[i].update(fetchedGame);
           } else {
-            console.log(`Appid ${dbGames[i].appid} is empty - consider removing it from your library!`);
+            console.log(`Appid ${dbGames[i].appid} has no details - marking as invalid`);
+            await dbGames[i].update({ invalid: true });
           }
-        }
 
-        // Delay to (hopefully) not get immediately rate-limited
-        await sleep();
+          // Delay to (hopefully) not get rate-limited
+          // - you will still get rate limited if you have too many games.
+          //   steam allows 100k requests/day, which comes out to like 69 request/minute and x/hr etc
+          await sleep();
+        }
       }
 
       return res.json({ success: true, items: dbGames.length, t: Date.now() });
