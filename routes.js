@@ -6,7 +6,8 @@ import {
 } from './controllers/defaultController.js';
 import {
   pageTMDB,
-  getTMDBData
+  getTMDBData,
+  getTMDBImages
 } from './controllers/tmdbController.js';
 import {
   pageSteam,
@@ -35,6 +36,7 @@ router.get(['/api/test-fetch', '/api/test-fetch/:delay'], apiTestFetch);
 
 // TMDB
 router.get('/api/tmdb/:category/:subcategory', getTMDBData);
+router.get('/api/tmdb/images/:category', getTMDBImages);
 
 // Steam
 router.get('/api/steam/:category', getSteamData);

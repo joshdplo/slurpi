@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { writeFile } from 'node:fs/promises';
+import { Readable } from 'node:stream';
 import { sendMessage } from '../wss.js';
 import Meta from '../db/Meta.js';
 import Movie from '../db/Movie.js';
@@ -68,7 +70,7 @@ async function tmdbFetch(path) {
   }
 }
 
-// Get TMDB Data
+/* Get TMDB Data */
 export async function getTMDBData(req, res) {
   const cat = req.params.category;
   const subcat = req.params.subcategory;
@@ -136,6 +138,42 @@ export async function getTMDBData(req, res) {
       });
 
       res.json({ success: true, items: tmdbData.length, t: Date.now() });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}
+
+/* Get TMDB Images */
+export async function getTMDBImages(req, res) {
+  const cat = req.params;
+  if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+
+  try {
+    const currentModel = getTMDBModel(cat);
+    const dbItems = await currentModel.findAll();
+
+    const imageURLs = [];
+    for (let i = 0; i < dbItems.length; i++) {
+      if (dbItems[i].poster_path) imageURLs.push({ id: dbItems[i].id, url: `https://image.tmdb.org/t/p/w200/${dbItems[i].poster_path}` })
+    }
+
+    for (let i = 0; i < imageURLs.length; i++) {
+      sendMessage({
+        fetch: req.path,
+        error: false,
+        complete: false,
+        progress: Math.floor((i + 1 / imageURLs.length + 1) * 100),
+        message: `Image ${i}/${imageURLs.length + 1}`,
+      });
+
+      //@TODO: LEFT OFF HERE
+      const response = await fetch('https://example.com/example.mp4');
+      const stream = Readable.fromWeb(response.body);
+      await writeFile('example.mp4', stream);
+
+      //@TODO: do we need to sleep() here? not sure about rate limiting...
     }
   } catch (error) {
     console.error(error);
