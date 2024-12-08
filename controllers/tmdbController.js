@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { writeFile } from 'node:fs/promises';
 import { Readable } from 'node:stream';
+import { join } from '../be-util.js';
 import { sendMessage } from '../wss.js';
 import Meta from '../db/Meta.js';
 import Movie from '../db/Movie.js';
@@ -152,6 +153,7 @@ export async function getTMDBImages(req, res) {
 
   try {
     const currentModel = getTMDBModel(cat);
+    const imageFolder = join('/public/images/tmdb');
     const dbItems = await currentModel.findAll();
 
     const imageURLs = [];
@@ -169,11 +171,11 @@ export async function getTMDBImages(req, res) {
       });
 
       //@TODO: LEFT OFF HERE
-      const response = await fetch('https://example.com/example.mp4');
+      const response = await fetch(imageURLs[i].url);
       const stream = Readable.fromWeb(response.body);
-      await writeFile('example.mp4', stream);
+      await writeFile(join(imageFolder, `${imageURLs[i].id}.jpg`), stream);
 
-      //@TODO: do we need to sleep() here? not sure about rate limiting...
+      // do we need to sleep() here? not sure about rate limiting for images...
     }
   } catch (error) {
     console.error(error);
