@@ -16,6 +16,10 @@ const Meta = sequelize.define('Meta', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  totalImageDownloads: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
   totalMovies: {
     type: DataTypes.INTEGER,
     defaultValue: 0
@@ -37,6 +41,18 @@ const Meta = sequelize.define('Meta', {
     defaultValue: 0
   },
   totalRecentSteamGames: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalSpotifySongs: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalSpotifyArtists: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalSpotifyShows: {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },

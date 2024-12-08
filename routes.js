@@ -11,7 +11,8 @@ import {
 } from './controllers/tmdbController.js';
 import {
   pageSteam,
-  getSteamData
+  getSteamData,
+  getSteamImages
 } from './controllers/steamController.js';
 import {
   pageSpotify
@@ -36,9 +37,10 @@ router.get(['/api/test-fetch', '/api/test-fetch/:delay'], apiTestFetch);
 
 // TMDB
 router.get('/api/tmdb/:category/:subcategory', getTMDBData);
-router.get('/api/tmdb/images/:category', getTMDBImages);
+router.get('/api/tmdb-images/:category', getTMDBImages);
 
 // Steam
 router.get('/api/steam/:category', getSteamData);
+router.get('/api/steam-images/:category', getSteamImages);
 
 export default router;

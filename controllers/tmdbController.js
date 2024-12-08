@@ -1,11 +1,19 @@
 import 'dotenv/config';
 import { writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { Readable } from 'node:stream';
 import { join } from '../be-util.js';
 import { sendMessage } from '../wss.js';
 import Meta from '../db/Meta.js';
 import Movie from '../db/Movie.js';
 import Show from '../db/Show.js';
+
+/**
+ * Meta Data
+ */
+let metaApiCalls = 0;
+let metaDBWrites = 0;
+let metaImageDownloads = 0;
 
 /**
  * TMDB Pages
@@ -65,6 +73,7 @@ async function tmdbFetch(path) {
     };
 
     const data = await response.json();
+    metaApiCalls++;
     return data;
   } catch (error) {
     console.error('error with tmdbFetch()', error);
@@ -82,6 +91,8 @@ export async function getTMDBData(req, res) {
   const url = () => `/account/${accountId}/${subcat}/${cat}?language=en-US&page=${currentPage}&sort_by=created_at.asc`;
 
   try {
+    const meta = await Meta.findByPk(1);
+
     // Initial fetch - get total pages
     const initialData = await tmdbFetch(url());
     const totalPages = initialData.total_pages;
@@ -119,6 +130,7 @@ export async function getTMDBData(req, res) {
       // If there is no data, bulk create the data
       await currentModel.bulkCreate(tmdbData, { validate: true })
         .then(() => {
+          metaDBWrites++;
           res.json({ success: true, items: tmdbData.length, t: Date.now() });
         })
         .catch(err => {
@@ -132,11 +144,36 @@ export async function getTMDBData(req, res) {
         if (dbItem) {
           await dbItem.update(fetchedItem)
             .catch(err => console.error(err));
+          metaDBWrites++;
         } else {
           await currentModel.create(fetchedItem)
             .catch(err => console.error(err));
+          metaDBWrites++;
         }
       });
+
+      const metaTotalObj = () => {
+        let key;
+        if (cat === 'movies') {
+          if (subcat === 'rated') {
+            key = 'ratedMovies';
+          } else {
+            key = 'totalMovies';
+          }
+        }
+        if (cat === 'tv') {
+          if (subcat === 'rated') {
+            key = 'ratedShows';
+          } else {
+            key = 'totalShows';
+          }
+        }
+
+        return { [key]: totalResults };
+      }
+
+      const metaTotals = metaTotalObj();
+      await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites, ...metaTotals });
 
       res.json({ success: true, items: tmdbData.length, t: Date.now() });
     }
@@ -148,12 +185,15 @@ export async function getTMDBData(req, res) {
 
 /* Get TMDB Images */
 export async function getTMDBImages(req, res) {
-  const cat = req.params;
+  const cat = req.params.category;
+  const force = req.query?.force;
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
 
   try {
+    const meta = await Meta.findByPk(1);
+
     const currentModel = getTMDBModel(cat);
-    const imageFolder = join('/public/images/tmdb');
+    const imageFolder = '/public/images/tmdb';
     const dbItems = await currentModel.findAll();
 
     const imageURLs = [];
@@ -162,21 +202,38 @@ export async function getTMDBImages(req, res) {
     }
 
     for (let i = 0; i < imageURLs.length; i++) {
-      sendMessage({
-        fetch: req.path,
-        error: false,
-        complete: false,
-        progress: Math.floor((i + 1 / imageURLs.length + 1) * 100),
-        message: `Image ${i}/${imageURLs.length + 1}`,
-      });
+      const imagePath = join(`${imageFolder}/${imageURLs[i].id}.jpg`);
+      const imageExists = await existsSync(imagePath);
+      if (!force && imageExists) {
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((i + 1 / imageURLs.length) * 100),
+          message: `Skipping image ${i + 1}/${imageURLs.length} (already exists)`,
+        });
+      } else {
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((i + 1 / imageURLs.length) * 100),
+          message: `Image ${i + 1}/${imageURLs.length}`,
+        });
 
-      //@TODO: LEFT OFF HERE
-      const response = await fetch(imageURLs[i].url);
-      const stream = Readable.fromWeb(response.body);
-      await writeFile(join(imageFolder, `${imageURLs[i].id}.jpg`), stream);
+        const response = await fetch(imageURLs[i].url);
+        const stream = Readable.fromWeb(response.body);
+        await writeFile(imagePath, stream);
+        metaImageDownloads++;
+      }
 
-      // do we need to sleep() here? not sure about rate limiting for images...
+      // it looks like images may not be rate limited, so we don't need to sleep() here!
+      // if you get a 429, try throwing in a sleep(500) here or higher
     }
+
+    await meta.update({ totalImageDownloads: meta.totalImageDownloads + metaImageDownloads });
+    metaImageDownloads = 0;
+    res.json({ success: true, items: dbItems.length, t: Date.now() });
   } catch (error) {
     console.error(error);
     res.json({ error, t: Date.now() });
