@@ -48,6 +48,10 @@ const Meta = sequelize.define('Meta', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  totalSpotifyAlbums: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
   totalSpotifyArtists: {
     type: DataTypes.INTEGER,
     defaultValue: 0

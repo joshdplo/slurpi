@@ -2,20 +2,22 @@ import express from "express";
 import {
   pageDashboard,
   pageTest,
-  apiTestFetch
+  apiTestFetch,
 } from './controllers/defaultController.js';
 import {
   pageTMDB,
   getTMDBData,
-  getTMDBImages
+  getTMDBImages,
 } from './controllers/tmdbController.js';
 import {
   pageSteam,
   getSteamData,
-  getSteamImages
+  getSteamImages,
 } from './controllers/steamController.js';
 import {
-  pageSpotify
+  pageSpotify,
+  getSpotifyLogin,
+  getSpotifyCallback,
 } from './controllers/spotifyController.js';
 const router = express.Router();
 
@@ -42,5 +44,9 @@ router.get('/api/tmdb-images/:category', getTMDBImages);
 // Steam
 router.get('/api/steam/:category', getSteamData);
 router.get('/api/steam-images/:category', getSteamImages);
+
+// Spotify
+router.get('/spotify/login', getSpotifyLogin);
+router.get('/auth/spotify', getSpotifyCallback);
 
 export default router;

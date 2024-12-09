@@ -1,3 +1,7 @@
+import 'dotenv/config';
+import querystring from 'node:querystring';
+import { generateRandomString } from "../be-util.js";
+
 /**
  * Spotify Page
  */
@@ -17,7 +21,21 @@ export async function pageSpotify(req, res, next) {
  * Spotify Auth
  */
 const scopes = ['user-library-read', 'user-top-read', 'user-follow-read'];
-export async function pageSpotifyAuth(req, res) {
+
+export async function getSpotifyLogin(req, res) {
+  const state = generateRandomString(16);
+
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id: process.env.SPOTIFY_CLIENT_ID,
+      scope: scopes.join(' '),
+      redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+      state: state
+    }));
+}
+
+export async function getSpotifyCallback(req, res) {
   res.json({ placeholder: true });
 };
 

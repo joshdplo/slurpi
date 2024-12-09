@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url';
 import path from 'node:path';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 
 /**
  * Path Helpers
@@ -59,4 +60,13 @@ export async function getDBSize() {
     console.error('Error getting DB File Size', error);
     return '0b';
   }
+}
+
+/**
+ * Randoms
+ */
+export function generateRandomString(length) {
+  return crypto.randomBytes(Math.ceil(length / 2))
+    .toString('hex')
+    .slice(0, length);
 }
