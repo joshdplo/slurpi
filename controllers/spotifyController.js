@@ -18,6 +18,7 @@ import SpotifyShow from '../db/SpotifyShow.js';
 let metaApiCalls = 0;
 let metaDBWrites = 0;
 let metaImageDownloads = 0;
+let metaObj = {};
 
 /**
  * Spotify Page
@@ -165,8 +166,84 @@ function getSpotifyModel(category) {
   return model;
 }
 
+// Spotify Formatting Helper
+function formatSpotifyData(cat, data) {
+  const formatted = [];
+  let metaKey = '';
+
+  for (let i = 0; i < data.length; i++) {
+    let item = data[i];
+
+    // tracks/toptracks formatting
+    if (cat === 'tracks' || cat === 'toptracks') {
+      item = cat === 'tracks' ? data[i].track : data[i];
+      metaKey = 'totalSpotifySongs';
+
+      formatted.push({
+        id: item.id,
+        isTopTrack: cat === 'toptracks',
+        name: item.name,
+        artists: item.artists.map(a => ({ name: a.name, url: a.external_urls?.spotify })),
+        duration_ms: item.duration_ms,
+        url: item.external_urls?.spotify,
+        image: item.album?.images[1].url, // ~300px
+        release_date: item.album?.release_date
+      });
+    }
+
+    // albums formatting
+    if (cat === 'albums') {
+      item = data[i].album;
+      metaKey = 'totalSpotifyAlbums';
+
+      formatted.push({
+        id: item.id,
+        name: item.name,
+        artists: item.artists.map(a => ({ name: a.name, url: a.external_urls?.spotify })),
+        total_tracks: item.total_tracks,
+        url: item.external_urls?.spotify,
+        image: item?.images[1].url, // ~300px
+        release_date: item.album?.release_date
+      });
+    }
+
+    // artists formatting
+    if (cat === 'artists') {
+      metaKey = 'totalSpotifyArtists';
+
+      formatted.push({
+        id: item.id,
+        name: item.name,
+        genres: item.genres,
+        url: item.external_urls?.spotify,
+        image: item?.images[1].url // ~300px
+      });
+    }
+
+    // shows formatting
+    if (cat === 'shows') {
+      item = data[i].show;
+      metaKey = 'totalSpotifyShows';
+
+      formatted.push({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        total_episodes: item.total_episodes,
+        url: item.external_urls?.spotify,
+        image: item?.images[1].url // ~300px
+      });
+    }
+  }
+
+  metaObj = { [metaKey]: data.length };
+  return formatted;
+}
+
+/* Get Spotify Data */
 export async function getSpotifyData(req, res) {
   const cat = req.params.category;
+  const force = req.query?.force;
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
   const fetchUrl = `${baseUrl}${catUrls[cat]}`;
   const currentModel = getSpotifyModel(cat);
@@ -218,9 +295,30 @@ export async function getSpotifyData(req, res) {
       }
     }
 
-    // TESTING: WRITE THE JSON SO WE CAN EASILY SEE THE STRUCTURE
-    await writeFile(join(`/scripts/${cat}.json`), JSON.stringify(spotifyData));
-    // END TESTING
+    // format the data for DB writing
+    const formattedData = formatSpotifyData(cat, spotifyData);
+
+    // write the data to DB
+    for (let i = 0; i < formattedData.length; i++) {
+      const dbItem = await currentModel.findByPk(formattedData[i].id);
+
+      if (force || !dbItem) {
+        currentModel.create(formattedData[i]);
+        metaDBWrites++;
+      }
+    }
+
+    // If testing is needed to see the JSON structure
+    // await writeFile(join(`/scripts/${cat}.json`), JSON.stringify(spotifyData));
+
+    await meta.update({
+      totalApiCalls: meta.totalApiCalls + metaApiCalls,
+      totalDBWrites: meta.totalDBWrites + metaDBWrites,
+      ...metaObj
+    });
+    metaApiCalls = 0;
+    metaDBWrites = 0;
+    metaObj = {};
 
     res.json({ success: true, items: spotifyData.length, t: Date.now() });
   } catch (error) {

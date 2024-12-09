@@ -3,7 +3,7 @@ import sequelize from './db.js';
 
 const SpotifyShow = sequelize.define('SpotifyShow', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
     unique: true
@@ -12,20 +12,20 @@ const SpotifyShow = sequelize.define('SpotifyShow', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  artists: {
-    type: DataTypes.JSON,
+  description: {
+    type: DataTypes.STRING,
     allowNull: true
   },
   url: {
-    type: DataTypes.JSON,
+    type: DataTypes.STRING,
     allowNull: true
   },
   image: {
     type: DataTypes.STRING,
     allowNull: true
   },
-  release_date: {
-    type: DataTypes.STRING,
+  total_episodes: {
+    type: DataTypes.INTEGER,
     allowNull: true
   }
 }, { timestamps: true });

@@ -172,8 +172,11 @@ export async function getTMDBData(req, res) {
         return { [key]: totalResults };
       }
 
-      const metaTotals = metaTotalObj();
-      await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites, ...metaTotals });
+      await meta.update({
+        totalApiCalls: meta.totalApiCalls + metaApiCalls,
+        totalDBWrites: meta.totalDBWrites + metaDBWrites,
+        ...metaTotalObj()
+      });
 
       res.json({ success: true, items: tmdbData.length, t: Date.now() });
     }
