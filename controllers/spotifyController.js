@@ -159,8 +159,8 @@ function getSpotifyModel(category) {
   let model;
   if (category === 'tracks' || category === 'toptracks') model = SpotifySong;
   if (category === 'albums') model = SpotifyAlbum;
-  if (category === 'shows') model = SpotifyShow;
   if (category === 'artists') model = SpotifyArtist;
+  if (category === 'shows') model = SpotifyShow;
 
   return model;
 }
@@ -175,12 +175,54 @@ export async function getSpotifyData(req, res) {
     const meta = await Meta.findByPk(1);
     const initialData = await spotifyFetch(req, fetchUrl);
 
-    const hasNext = initialData.next;
-    const limit = initialData.limit;
-    const totalResults = initialData.total;
+    // Top-level data (varies between request type)
+    // this should contain the fields 'limit', 'total', 'next', etc.
+    const getUnwrappedData = () => {
+      if (cat === 'artists') return initialData.artists;
+      return initialData;
+    }
 
+    // Iterable data (varies between request type)
+    // this would be the items[] array
+    const getIterableData = () => {
+      if (cat === 'artists') return initialData.artists.items;
+      return initialData.items;
+    }
 
-    res.json({ success: true, items: totalResults, t: Date.now() });
+    const unwrappedData = getUnwrappedData();
+    const iterableData = getIterableData();
+
+    const getTotalResults = () => {
+      if (cat === 'toptracks') return unwrappedData.limit;
+      return unwrappedData.total;
+    }
+
+    let spotifyData = [...iterableData];
+    const nextUrl = unwrappedData.next;
+    const limit = unwrappedData.limit;
+    const totalResults = getTotalResults();
+    const numPages = Math.ceil(totalResults / limit);
+
+    if (limit < totalResults && nextUrl) {
+      for (let i = 0; i < numPages; i++) {
+        const newData = await spotifyFetch(req, nextUrl);
+        spotifyData = [...newData.items, ...spotifyData];
+
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((i + 1 / numPages) * 100),
+          message: `Page ${i + 1}/${numPages}`,
+        });
+      }
+    }
+
+    // TESTING: WRITE THE JSON SO WE CAN EASILY SEE THE STRUCTURE
+    await writeFile(join(`/scripts/${cat}.json`), JSON.stringify(spotifyData));
+    // END TESTING
+
+    res.json({ success: true, items: spotifyData.length, t: Date.now() });
   } catch (error) {
     console.error(error);
     res.json({ error, t: Date.now() });
