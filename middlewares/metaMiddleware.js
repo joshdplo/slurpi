@@ -13,7 +13,15 @@ export default async function metaMiddleware(req, res, next) {
     }
 
     // Get Total Items
-    const trackedTotals = ['totalMovies', 'totalShows', 'totalSteamGames', 'totalSpotifySongs', 'totalSpotifyArtists', 'totalSpotifyShows'];
+    const trackedTotals = [
+      'totalMovies',
+      'totalShows',
+      'totalSteamGames',
+      'totalSpotifySongs',
+      'totalSpotifyAlbums',
+      'totalSpotifyArtists',
+      'totalSpotifyShows'
+    ];
     let totalItems = 0;
     for (let i of Object.keys(meta.dataValues)) {
       if (trackedTotals.indexOf(i) > -1) totalItems += meta.dataValues[i];
@@ -31,6 +39,7 @@ export default async function metaMiddleware(req, res, next) {
     res.locals.totalSteamGames = formatNumber(meta.totalSteamGames);
     res.locals.totalRecentSteamGames = formatNumber(meta.totalRecentSteamGames);
     res.locals.totalSpotifySongs = formatNumber(meta.totalSpotifySongs);
+    res.locals.totalSpotifyAlbums = formatNumber(meta.totalSpotifyAlbums);
     res.locals.totalSpotifyArtists = formatNumber(meta.totalSpotifyArtists);
     res.locals.totalSpotifyShows = formatNumber(meta.totalSpotifyShows);
 

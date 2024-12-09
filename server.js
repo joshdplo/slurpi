@@ -8,6 +8,7 @@ import routes from './routes.js';
 import initAppData from './middlewares/initAppMiddleware.js';
 import { alertMiddleware } from './middlewares/alertMiddleware.js';
 import metaMiddleware from './middlewares/metaMiddleware.js';
+import authMiddleware from './middlewares/authMiddleware.js';
 
 const app = express();
 
@@ -32,6 +33,7 @@ if (process.env.DEBUG === 'true') {
 
 // Custom Middlewares
 initAppData(app);
+app.use(authMiddleware);
 app.use(metaMiddleware);
 app.use(alertMiddleware);
 

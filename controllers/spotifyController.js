@@ -21,10 +21,10 @@ export async function pageSpotify(req, res, next) {
  * Spotify Auth
  */
 const scopes = ['user-library-read', 'user-top-read', 'user-follow-read'];
+const state = generateRandomString(16);
 
+// Spotify Login (Redirect)
 export async function getSpotifyLogin(req, res) {
-  const state = generateRandomString(16);
-
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -35,8 +35,61 @@ export async function getSpotifyLogin(req, res) {
     }));
 }
 
+// Spotify Auth
 export async function getSpotifyCallback(req, res) {
-  res.json({ placeholder: true });
+  const code = req.query.code || null;
+  const stateStr = req.query.state || null;
+
+  console.log('--- In Spotify Callback ---');
+  console.log(`code: ${code}`);
+  console.log(`state: ${stateStr}`);
+
+  // match state for extra security as suggested by spotify api
+  if (stateStr === null || stateStr !== state) return res.json({ error: 'state mismatch', t: Date.now() });
+
+  // Set up fetch
+  const fetchBodyObj = {
+    code,
+    redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+    grant_type: 'authorization_code'
+  };
+  const urlSearchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(fetchBodyObj)) {
+    urlSearchParams.append(key, value);
+  }
+  const url = 'https://accounts.spotify.com/api/token';
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + (new Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
+    },
+    body: urlSearchParams
+  };
+
+  try {
+    const response = await fetch(url, fetchOptions);
+    if (!response.ok) {
+      console.log(response);
+      throw new Error('spotify callback fetch response not ok');
+    };
+
+    const data = await response.json();
+    if (data.access_token) {
+      req.session.spotifyAccessToken = data.access_token;
+      req.session.spotifyLoggedIn = true;
+
+      res.redirect('/spotify');
+    } else {
+      req.session.spotifyLoggedIn = false;
+      return res.json({ error: 'Did not receive access token from auth' });
+    }
+  } catch (error) {
+    console.error(error);
+    req.session.spotifyLoggedIn = false;
+    return res.json({ error: 'Error getting spotify callback', t: Date.now() });
+  }
+
 };
 
 /**
