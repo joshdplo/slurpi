@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
 
-const SpotifySong = sequelize.define('SpotifySong', {
+const SpotifyArtist = sequelize.define('SpotifyArtist', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -12,10 +12,6 @@ const SpotifySong = sequelize.define('SpotifySong', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  artists: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
   url: {
     type: DataTypes.JSON,
     allowNull: true
@@ -24,10 +20,6 @@ const SpotifySong = sequelize.define('SpotifySong', {
     type: DataTypes.STRING,
     allowNull: true
   },
-  release_date: {
-    type: DataTypes.STRING,
-    allowNull: true
-  }
 }, { timestamps: true });
 
-export default SpotifySong;
+export default SpotifyArtist;

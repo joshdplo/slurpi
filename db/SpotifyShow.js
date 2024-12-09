@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
 
-const SpotifySong = sequelize.define('SpotifySong', {
+const SpotifyShow = sequelize.define('SpotifyShow', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -30,4 +30,4 @@ const SpotifySong = sequelize.define('SpotifySong', {
   }
 }, { timestamps: true });
 
-export default SpotifySong;
+export default SpotifyShow;
