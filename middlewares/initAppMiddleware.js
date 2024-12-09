@@ -6,7 +6,6 @@ async function initAppData(app) {
   app.locals.title = null; // overridden by res, needed for all pages
   app.locals.description = null; // overridden by res, needed for all pages
   app.locals.messages = null; // overridden by res, needed for all pages
-  app.locals.dbSize = await getDBSize();
   app.locals.spotifyLoggedIn = false;
   app.locals.global = {
     NAME: process.env.NAME,

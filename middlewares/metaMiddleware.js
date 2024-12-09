@@ -1,5 +1,5 @@
 import Meta from "../db/Meta.js";
-import { formatNumber } from "../be-util.js";
+import { getDBSize, formatNumber } from "../be-util.js";
 
 export default async function metaMiddleware(req, res, next) {
   try {
@@ -11,6 +11,9 @@ export default async function metaMiddleware(req, res, next) {
       console.log('Meta not found in the DB - Creating it...');
       meta = await Meta.create(); // everything in meta schema has default values
     }
+
+    // Get DB Size
+    const dbSize = await getDBSize();
 
     // Get Total Items
     const trackedTotals = [
@@ -28,6 +31,7 @@ export default async function metaMiddleware(req, res, next) {
     }
 
     // Set Locals
+    res.locals.dbSize = dbSize;
     res.locals.totalApiCalls = formatNumber(meta.totalApiCalls);
     res.locals.totalDBWrites = formatNumber(meta.totalDBWrites);
     res.locals.totalImageDownloads = formatNumber(meta.totalImageDownloads);

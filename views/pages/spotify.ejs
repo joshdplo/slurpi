@@ -43,9 +43,39 @@
           <div class="fetcher" data-service="spotify" data-query="albums" data-name="Saved Albums"></div>
           <div class="fetcher" data-service="spotify" data-query="artists" data-name="Followed Artists"></div>
           <div class="fetcher" data-service="spotify" data-query="shows" data-name="Followed Shows/Podcasts"></div>
+          <div class="fetcher" data-service="spotify-images" data-query="tracks" data-name="Track Images"></div>
+          <div class="fetcher" data-service="spotify-images" data-query="albums" data-name="Album Images"></div>
+          <div class="fetcher" data-service="spotify-images" data-query="artists" data-name="Artist Images"></div>
+          <div class="fetcher" data-service="spotify-images" data-query="shows" data-name="Show/Podcast Images"></div>
         </div>
       </div>
 
+      <div class="content">
+        <div class="data-list">
+          <h2>Songs</h2>
+          <% songs.forEach(i => { %>
+          <span class="data-song"><%= i.name %></span>
+          <% }) %>
+        </div>
+        <div class="data-list">
+          <h2>Albums</h2>
+          <% albums.forEach(i => { %>
+          <span class="data-album"><%= i.name %></span>
+          <% }) %>
+        </div>
+        <div class="data-list">
+          <h2>Artists</h2>
+          <% artists.forEach(i => { %>
+          <span class="data-artist"><%= i.name %></span>
+          <% }) %>
+        </div>
+        <div class="data-list">
+          <h2>Shows/Podcasts</h2>
+          <% shows.forEach(i => { %>
+          <span class="data-show"><%= i.name %></span>
+          <% }) %>
+        </div>
+      </div>
     </main>
   </div>
 

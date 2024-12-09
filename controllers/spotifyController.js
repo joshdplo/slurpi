@@ -25,8 +25,17 @@ let metaObj = {};
  */
 export async function pageSpotify(req, res, next) {
   try {
+    const songs = await SpotifySong.findAll();
+    const albums = await SpotifyAlbum.findAll();
+    const artists = await SpotifyArtist.findAll();
+    const shows = await SpotifyShow.findAll();
+
     res.render('pages/spotify', {
-      title: 'Spotify'
+      title: 'Spotify',
+      songs,
+      albums,
+      artists,
+      shows
     });
   } catch (error) {
     console.error(error.message);
@@ -308,9 +317,6 @@ export async function getSpotifyData(req, res) {
       }
     }
 
-    // If testing is needed to see the JSON structure
-    // await writeFile(join(`/scripts/${cat}.json`), JSON.stringify(spotifyData));
-
     await meta.update({
       totalApiCalls: meta.totalApiCalls + metaApiCalls,
       totalDBWrites: meta.totalDBWrites + metaDBWrites,
@@ -326,3 +332,63 @@ export async function getSpotifyData(req, res) {
     res.json({ error, t: Date.now() });
   }
 };
+
+/* Get Spotify Images */
+export async function getSpotifyImages(req, res) {
+  const cat = req.params.category;
+  const force = req.query?.force;
+  if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+
+  try {
+    const meta = await Meta.findByPk(1);
+    const currentModel = getSpotifyModel(cat);
+    const imageFolder = '/public/images/spotify';
+    const dbItems = await currentModel.findAll();
+
+    const imageURLs = [];
+    for (let i = 0; i < dbItems.length; i++) {
+      if (dbItems[i].image) imageURLs.push({ id: dbItems[i].id, url: dbItems[i].image });
+    }
+
+    for (let i = 0; i < imageURLs.length; i++) {
+      const imagePath = join(`${imageFolder}/${imageURLs[i].id}.jpg`);
+      const imageExists = await existsSync(imagePath);
+
+      if (!force && imageExists) {
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((i + 1 / imageURLs.length) * 100),
+          message: `Skipping image ${i + 1}/${imageURLs.length} (already exists)`,
+        });
+      } else {
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((i + 1 / imageURLs.length) * 100),
+          message: `Image ${i + 1}/${imageURLs.length}`,
+        });
+
+        const response = await fetch(imageURLs[i].url);
+        const stream = Readable.fromWeb(response.body);
+        await writeFile(imagePath, stream);
+        metaImageDownloads++;
+      }
+
+      // it looks like images may not be rate limited, so we don't need to sleep() here!
+      // if you get a 429, try throwing in a sleep(500) here or higher
+    }
+
+    await meta.update({
+      totalImageDownloads: meta.totalImageDownloads + metaImageDownloads
+    });
+    metaImageDownloads = 0;
+
+    res.json({ success: true, items: imageURLs.length, t: Date.now() });
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}

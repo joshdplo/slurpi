@@ -236,7 +236,7 @@ export async function getTMDBImages(req, res) {
 
     await meta.update({ totalImageDownloads: meta.totalImageDownloads + metaImageDownloads });
     metaImageDownloads = 0;
-    res.json({ success: true, items: dbItems.length, t: Date.now() });
+    res.json({ success: true, items: imageURLs.length, t: Date.now() });
   } catch (error) {
     console.error(error);
     res.json({ error, t: Date.now() });
