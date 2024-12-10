@@ -4,7 +4,7 @@ Slurp up API data!
 
 This is an unstable node application that uses your developer API keys to pull down data, format it, and store it in a SQLite database. It can also download images associated with the data, as well as generate JSON files for the data. The code isn't pretty, so if you need to change something chances are you'll have to get your hands dirty.
 
-Note: the way I handle my saved items on these types of platforms might seem backwards. I "like" or "favorite" everything i want to keep so that it is automatically put into a default list. I then work backwards from there. WHY?! Because it's way faster - one click to like/favorite vs. x clicks and x loading time to put things into playlists. I can always go back and organize later.
+Note: the way I handle my saved items on these types of platforms might seem backwards. I "like" or "favorite" everything i want to keep so that it is automatically put into a default list. I then work backwards from there. WHY?! I don't know, it's a habit I picked up from using youtube for music before youtube music.
 
 -----------
 
