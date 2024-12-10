@@ -138,3 +138,4 @@ public/main.*
 public/images/tmdb/*
 public/images/steam/*
 public/images/spotify/*
+json/*.json
