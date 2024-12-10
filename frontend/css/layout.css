@@ -59,3 +59,23 @@
   gap: .4rem;
   font-size: .9rem;
 }
+
+/**
+ * Login
+ */
+.login-button,
+.logged-in {
+  font-size: 1rem;
+  font-family: var(--ff-title);
+  font-weight: bold;
+  text-transform: uppercase;
+  background: var(--c-primary);
+  padding: .75rem 1.75rem;
+  border: 2px solid var(--c-black);
+}
+
+.logged-in {
+  border: 0;
+  background-color: var(--c-status-success);
+  text-transform: none;
+}

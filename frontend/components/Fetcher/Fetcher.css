@@ -19,6 +19,10 @@
   gap: 1rem;
 }
 
+.fetchers.disabled {
+  cursor: not-allowed;
+}
+
 .fetcher {
   position: relative;
   display: flex;
@@ -26,6 +30,12 @@
   gap: 1rem;
   border: 1px solid var(--c-gray);
   border-radius: .1rem;
+}
+
+.fetchers.disabled .fetcher {
+  opacity: .7;
+  background-color: var(--c-status-error);
+  pointer-events: none;
 }
 
 .fetcher button {

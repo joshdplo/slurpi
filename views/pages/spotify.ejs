@@ -28,16 +28,20 @@
 
       <div class="content">
         <% if(spotifyLoggedIn) { %>
-        <span class="login-status in">Spotify Logged In</span>
+        <span class="logged-in">✔️ Spotify Logged In</span>
         <% } else { %>
         <br>
-        <a href="/spotify/login">Log in to Spotify</a>
+        <a href="/spotify/login" class="login-button">🔑 Log in to Spotify</a>
         <% } %>
         <span class="spacer-2"></span>
       </div>
 
       <div class="content">
-        <div class="fetchers">
+        <% if(!spotifyLoggedIn) { %>
+        <p>You must log in to spotify OR ELSE!!! <br>(fetchers disabled until you log in)</p>
+        <br>
+        <% } %>
+        <div class="fetchers <%= spotifyLoggedIn ? '' : 'disabled'%>">
           <div class="fetcher" data-service="spotify" data-query="tracks" data-name="Saved Songs"></div>
           <div class="fetcher" data-service="spotify" data-query="toptracks" data-name="Top 10 Songs (Long Term)"></div>
           <div class="fetcher" data-service="spotify" data-query="albums" data-name="Saved Albums"></div>
