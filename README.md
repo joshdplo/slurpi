@@ -4,7 +4,9 @@ Slurp up API data!
 
 This is an unstable node application that uses your developer API keys to pull down data, format it, and store it in a SQLite database. It can also download images associated with the data, as well as generate JSON files for the data. The code isn't pretty, so if you need to change something chances are you'll have to get your hands dirty.
 
-The way I handle my saved items on these platform is that I "like" or "favorite" everything i want to keep so that it is automatically put into a default list. I then work backwards from there. For example: with TMDB I "favorite" every movie that i've seen. If I liked that movie a lot, I rate it. This way, I have a generic list of everything I've watched, and then a further list of things I liked. Specifically with TMDB, you get your ratings as a number 0-10 so you can sort them as you like using that.
+Note: the way I handle my saved items on these types of platforms might seem backwards. I "like" or "favorite" everything i want to keep so that it is automatically put into a default list. I then work backwards from there. WHY?! Because it's way faster - one click to like/favorite vs. x clicks and x loading time to put things into playlists. I can always go back and organize later.
+
+-----------
 
 ## APIs Used
 
@@ -25,6 +27,8 @@ Movies and TV (shows) are queried separately for `favorite` and `rated` based on
 
 Images can be downloaded for movies and tv. The images are based off of the associated "poster" image and will be `.jpg` files named with the movie or tv show `id`.
 
+-----------
+
 ### Steam
 [steam](https://store.steampowered.com/) is a game distribution service by Valve that's been around for a long time.
 
@@ -38,6 +42,8 @@ Owned games returns a list of all your games by `appid`, as well as the total ti
 **Steam Images**
 
 Images can be downloaded for steam games. The images are based off of the game's "capsule" image and will be `.jpg` files named with the game's `appid`.
+
+-----------
 
 ### Spotify
 [spotify](https://spotify.com) is a popular subscription music service which also has shows/podcasts and audiobooks.
