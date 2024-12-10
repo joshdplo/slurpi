@@ -8,6 +8,17 @@ Note: the way I handle my saved items on these types of platforms might seem bac
 
 -----------
 
+## How to use
+1. Clone the repo
+2. Copy the `.env.example` file and rename it to `.env` | `cp .env.example .env`
+3. Add the respective API keys to the `.env` file. Note for Spotify: the redirect_uri that's in the `.env.example` works fine, so you can just add that into your spotify app's settings.
+4. Install dependencies | `npm i`
+5. Start the project with `npm start` and slurp! Default port 3033 @ http://localhost:3033
+
+Usage notes: just make sure that you get the actual API data before trying to download images, because the images are dependent upon the data. For Steam, same deal there, you need to get your owned games before you can get the game details, and you need to get the game details before you can get the images. The Steam game details take a long time if you have lots of games because there is a 2-second pause between requests so that you don't get immediately rate-limited.
+
+-----------
+
 ## APIs Used
 
 ### TMDB (The Movie Database)
