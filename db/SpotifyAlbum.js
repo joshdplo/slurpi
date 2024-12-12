@@ -31,6 +31,14 @@ const SpotifyAlbum = sequelize.define('SpotifyAlbum', {
   release_date: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  super: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  mega: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, { timestamps: true });
 

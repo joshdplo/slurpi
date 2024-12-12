@@ -36,18 +36,10 @@
       </div>
 
       <div class="content">
-        <div class="data-list">
-          <h2>Movies</h2>
-          <% movies.forEach(i => { %>
-          <span class="data-movie"><%= i.title %></span>
-          <% }) %>
-        </div>
-        <div class="data-list">
-          <h2>Shows</h2>
-          <% shows.forEach(i => { %>
-          <span class="data-show"><%= i.name %></span>
-          <% }) %>
-        </div>
+        <h2>Movies</h2>
+        <div class="CardsList tmdb-movies" data-cards="<%= JSON.stringify(movies) %>"></div>
+        <h2>Shows</h2>
+        <div class="CardsList tmdb-shows" data-cards="<%= JSON.stringify(shows) %>"></div>
       </div>
 
     </main>

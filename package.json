@@ -7,7 +7,8 @@
     "start": "npm run dev",
     "dev": "concurrently --kill-others --names client,server \"vite build --watch\" \"nodemon server.js\"",
     "build": "vite build",
-    "run": "NODE_ENV=production node server.js"
+    "run": "NODE_ENV=production node server.js",
+    "json": "node scripts/generate-json.js"
   },
   "nodemonConfig": {
     "ext": "js,ejs",

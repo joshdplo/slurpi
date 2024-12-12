@@ -19,7 +19,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// Middlewares
+// Core Middlewares
+app.use(express.json());
 app.use(express.static('./public'));
 
 // Middleware dubugging

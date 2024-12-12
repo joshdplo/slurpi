@@ -39,6 +39,10 @@ const Movie = sequelize.define('Movie', {
   rating: {
     type: DataTypes.INTEGER,
     allowNull: true,
+  },
+  mega: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, { timestamps: true });
 

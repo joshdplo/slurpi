@@ -27,6 +27,14 @@ const SpotifyShow = sequelize.define('SpotifyShow', {
   total_episodes: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  super: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  mega: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, { timestamps: true });
 

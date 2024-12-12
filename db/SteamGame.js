@@ -68,6 +68,14 @@ const SteamGame = sequelize.define('SteamGame', {
     type: DataTypes.JSON,
     allowNull: true
   },
+  super: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  mega: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 }, { timestamps: true });
 
 export default SteamGame;

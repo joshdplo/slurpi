@@ -1,0 +1,57 @@
+.CardsList {
+  position: relative;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 12.5rem 12.5rem 12.5rem;
+  gap: 1rem;
+  padding-bottom: 3rem;
+}
+
+.CardsList button.load-more {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: .25rem .7rem;
+  font-size: 1rem;
+  font-family: var(--ff-title);
+  font-weight: bold;
+  background-color: var(--c-status-success);
+  border: .1rem solid var(--c-black);
+  border-radius: 1rem;
+}
+
+.CardsList .card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.CardsList .card .info {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  opacity: 0;
+  padding: .7rem;
+  transition: opacity .3s ease;
+  background-color: var(--c-black);
+  color: var(--c-white);
+  overflow: hidden;
+}
+
+.CardsList .card:hover .info {
+  opacity: 1;
+}
+
+.CardsList .info label {
+  margin-top: .5rem;
+  position: relative;
+  display: flex;
+  padding: .2rem;
+  font-size: .9rem;
+  border: 1px solid #fff;
+}

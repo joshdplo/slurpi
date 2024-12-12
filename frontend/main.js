@@ -7,6 +7,7 @@ import './global/loader.js';
 import './global/ws.js';
 import Sidebar from './components/Sidebar/Sidebar.js';
 import Fetcher from './components/Fetcher/Fetcher.js';
+import TMDBCards from './components/TMDBCards/TMDBCards.js';
 
 // DOM Load
 document.addEventListener('DOMContentLoaded', function DOMLoaded() {
@@ -18,4 +19,10 @@ document.addEventListener('DOMContentLoaded', function DOMLoaded() {
   // fetchers
   const fetchers = document.querySelectorAll('.fetcher');
   [...fetchers].map(el => Fetcher(el));
+
+  // tmdb cards
+  const tmdbMoviesContainer = document.querySelector('.tmdb-movies');
+  const tmdbShowsContainer = document.querySelector('.tmdb-shows');
+  TMDBCards(tmdbMoviesContainer, 'tmdb', 'movies');
+  TMDBCards(tmdbShowsContainer, 'tmdb', 'tv');
 });

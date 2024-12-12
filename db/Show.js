@@ -38,6 +38,10 @@ const Show = sequelize.define('Show', {
   rating: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  mega: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, { timestamps: true });
 

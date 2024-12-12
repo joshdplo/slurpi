@@ -242,3 +242,28 @@ export async function getTMDBImages(req, res) {
     res.json({ error, t: Date.now() });
   }
 }
+
+/* Update TMDB Item */
+export async function postTMDBItem(req, res) {
+  const cat = req.params.category;
+  const id = req.params.id;
+  if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+
+  try {
+    const currentModel = getTMDBModel(cat);
+    const item = await currentModel.findByPk(id);
+
+    if (item) {
+      for (let [key, val] of Object.entries(req.body)) {
+        item[key] = val;
+      }
+      await item.save();
+      res.json({ success: true, items: 1, t: Date.now() });
+    } else {
+      res.json({ error: `Item with id ${id} not found`, t: Date.now() });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}

@@ -24,6 +24,14 @@ const SpotifyArtist = sequelize.define('SpotifyArtist', {
     type: DataTypes.STRING,
     allowNull: true
   },
+  super: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  mega: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 }, { timestamps: true });
 
 export default SpotifyArtist;
