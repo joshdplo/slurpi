@@ -52,7 +52,7 @@ export function sleep(ms = 2000) {
 // Get database size
 export async function getDBSize() {
   try {
-    const stats = fs.statSync(process.env.DB_URL);
+    const stats = fs.statSync('./db/db.sqlite');
     let formatted = formatBytes(stats.size);
     formatted = formatted.replace(' ', '');
     return formatted;

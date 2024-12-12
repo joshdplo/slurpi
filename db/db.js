@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { Sequelize } from 'sequelize';
-import { join } from '../be-util.js';
+import { resolve } from '../be-util.js';
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: join(process.env.DB_URL),
+  storage: resolve('./db/db.sqlite'),
   // logging: false
 });
 
