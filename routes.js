@@ -14,6 +14,7 @@ import {
   pageSteam,
   getSteamData,
   getSteamImages,
+  postSteamItem,
 } from './controllers/steamController.js';
 import {
   pageSpotify,
@@ -48,6 +49,7 @@ router.post('/api/tmdb-item/:category/:id', postTMDBItem);
 // Steam
 router.get('/api/steam/:category', getSteamData);
 router.get('/api/steam-images/:category', getSteamImages);
+router.post('/api/steam-item/:category/:id', postSteamItem);
 
 // Spotify
 router.get('/spotify/login', getSpotifyLogin);

@@ -35,14 +35,8 @@
       </div>
 
       <div class="content">
-        <div class="data-list">
-          <h2>Games</h2>
-          <% steamGames.forEach(i => { %>
-          <% if(!i.invalid){ %>
-          <span class="data-game"><%= i.name %></span>
-          <% } %>
-          <% }) %>
-        </div>
+        <h2>Games</h2>
+        <div class="CardsList steam-games" data-cards="<%= JSON.stringify(steamGames) %>"></div>
       </div>
 
     </main>

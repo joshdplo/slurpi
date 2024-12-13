@@ -215,3 +215,27 @@ export async function getSteamImages(req, res) {
     res.json({ error, t: Date.now() });
   }
 }
+
+/* Update Steam Item */
+export async function postSteamItem(req, res) {
+  const cat = req.params.category;
+  const id = req.params.id;
+  if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+
+  try {
+    const item = await SteamGame.findOne({ where: { appid: id } });
+
+    if (item) {
+      for (let [key, val] of Object.entries(req.body)) {
+        item[key] = val;
+      }
+      await item.save();
+      res.json({ success: true, items: 1, t: Date.now() });
+    } else {
+      res.json({ error: `Item with appid ${id} not found`, t: Date.now() });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}

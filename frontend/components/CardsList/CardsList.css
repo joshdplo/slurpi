@@ -2,9 +2,7 @@
   position: relative;
   display: grid;
   justify-content: center;
-  grid-template-columns: 12.5rem 12.5rem 12.5rem;
-  gap: 1rem;
-  padding-bottom: 3rem;
+  grid-template-columns: repeat(auto-fill, 150px);
 }
 
 .CardsList button.load-more {
@@ -23,8 +21,13 @@
 
 .CardsList .card {
   position: relative;
-  display: block;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.CardsList .card img {
+  max-width: 100%;
+  height: auto;
 }
 
 .CardsList .card .info {
@@ -37,14 +40,20 @@
   flex-direction: column;
   opacity: 0;
   padding: .7rem;
-  transition: opacity .3s ease;
-  background-color: var(--c-black);
+  font-size: .9rem;
+  transition: .1s ease;
+  background-color: rgba(0, 0, 0, .9);
   color: var(--c-white);
-  overflow: hidden;
+  z-index: 3;
+}
+
+.CardsList .card:hover img {
+  filter: blur(4px);
 }
 
 .CardsList .card:hover .info {
   opacity: 1;
+  transform: scale(1.15);
 }
 
 .CardsList .info label {
@@ -54,4 +63,17 @@
   padding: .2rem;
   font-size: .9rem;
   border: 1px solid #fff;
+}
+
+.CardsList .info input[type="checkbox"] {
+  margin-left: 4px;
+}
+
+/* Steam */
+.CardsList.steam-games {
+  grid-template-columns: repeat(auto-fill, 231px);
+}
+
+.CardsList.steam-games .card .info {
+  height: auto;
 }

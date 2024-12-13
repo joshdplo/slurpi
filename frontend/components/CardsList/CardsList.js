@@ -1,37 +1,50 @@
-import './TMDBCards.css';
+import './CardsList.css';
 import { sendEvent, createElement } from '../../fe-util.js';
 
-export default function TMDBCards(container, service, category, cardsMax = 15) {
+export default function CardsList(container, service, category) {
+  if (!container) {
+    console.warn(`No container found for ${service}/${category}`);
+    return;
+  }
   const cardsArr = JSON.parse(container.getAttribute('data-cards'));
-  let loadButton = null;
-  let cardElements = [];
-  const totalCards = cardsArr.length;
-  let cardsShowing = 0;
+
+  function getCardLInk(data) {
+    if (service === 'spotify') return data.url;
+    if (service === 'steam') return `https://store.steampowered.com/app/${data.appid}`;
+    if (service === 'tmdb') return `https://www.themoviedb.org/${category.replace('s', '')}/${id}`;
+    return null;
+  }
 
   function createCard(data) {
-    const id = data?.id || data?.appid;
+    if (data?.invalid) return;
+
+    const id = data?.appid || data?.id;
     const imgSrc = `/images/${service}/${id}.jpg`;
     const title = data?.name || data?.title;
-    const favorite = data?.rating || data?.favorite ? 'favorite' : null;
-    const mega = data?.mega ? 'mega' : null;
+    const description = data?.description || data?.short_description || data?.overview || null;
+    const isMega = data?.mega ? 'mega' : null;
+    const isSuper = data?.super ? 'super' : null;
 
-    const wrapper = createElement('div', ['card', favorite, mega]);
+    const wrapper = createElement('div', ['card', isMega, isSuper]);
     wrapper.setAttribute('data-id', id);
     wrapper.innerHTML = `
       <image src="${imgSrc}" alt="${title}" loading="lazy">
       <div class="info">
         <span class="title">${title}</span>
-        <span class="">more to come</span>
         <div class="edit">
+          <label for="super${id}">
+            SUPER?
+            <input type="checkbox" name="super" id="super${id}" ${isSuper ? 'checked' : ''} ${service === 'tmdb' ? 'disabled="true"' : ''}>
+          </label>
           <label for="mega${id}">
-            MEGA
-            <input type="checkbox" name="mega" id="mega${id}" ${mega ? 'checked' : ''}>
+            MEGA?
+            <input type="checkbox" name="mega" id="mega${id}" ${isMega ? 'checked' : ''}>
           </label>
         </div>
       </div>
     `;
 
-    cardElements.push(wrapper);
+    container.appendChild(wrapper);
   }
 
   async function updateValue(path, json) {
@@ -50,42 +63,22 @@ export default function TMDBCards(container, service, category, cardsMax = 15) {
     sendEvent('alert', { message: `Update ${status}`, type: status });
   }
 
-  function loadMoreCards() {
-    cardsShowing += cardsMax;
-    for (let i = 0; i < cardsMax; i++) {
-      const el = cardElements.shift();
-      container.appendChild(el);
-    }
-
-    cardsShowing += cardsMax;
-    if (cardsShowing >= totalCards) loadButton.setAttribute('disabled', true);
-  }
-
   async function onClick(e) {
-    // load button click
-    if (e.target === loadButton) loadMoreCards();
-
     // item checkbox click
     if (e.target.tagName === 'INPUT' && e.target.getAttribute('type') === 'checkbox') {
       const itemId = e.target.closest('.card').getAttribute('data-id');
-      const checked = e.target.checked;
+      const checkboxName = e.target.getAttribute('name');
+      const isChecked = e.target.checked;
 
       e.target.setAttribute('disabled', 'true');
-      await updateValue(`/api/tmdb-item/${category}/${itemId}`, { mega: checked });
+      await updateValue(`/api/${service}-item/${category}/${itemId}`, { [checkboxName]: isChecked });
       e.target.removeAttribute('disabled');
     }
   }
 
   function init() {
-    // set up
-    loadButton = createElement('button', ['load-more'], 'Load More', container);
     container.addEventListener('click', onClick);
-
-    // populate initial elements
     cardsArr.forEach(c => createCard(c));
-
-    // do first load
-    loadMoreCards();
   }
 
   init();
