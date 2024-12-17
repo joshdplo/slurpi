@@ -196,7 +196,17 @@ export async function getTMDBStatic(req, res) {
     const movieGenres = await tmdbFetch(movieGenresPath);
     const tvGenres = await tmdbFetch(tvGenresPath);
 
-    await meta.update({ tmdbMovieGenres: movieGenres.genres, tmdbTvGenres: tvGenres.genres });
+    const formattedMovieGenres = {};
+    movieGenres.genres.forEach(genre => {
+      formattedMovieGenres[genre.id] = genre.name;
+    });
+
+    const formattedTvGenres = {};
+    tvGenres.genres.forEach(genre => {
+      formattedTvGenres[genre.id] = genre.name;
+    });
+
+    await meta.update({ tmdbMovieGenres: formattedMovieGenres, tmdbTvGenres: formattedTvGenres });
     res.json({ success: true, items: movieGenres.genres.length + tvGenres.genres.lenght, t: Date.now() });
   } catch (error) {
     console.error(error);
