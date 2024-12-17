@@ -186,6 +186,24 @@ export async function getTMDBData(req, res) {
   }
 }
 
+/* Get TMDB Static Data */
+export async function getTMDBStatic(req, res) {
+  const movieGenresPath = '/genre/movie/list?language=en';
+  const tvGenresPath = '/genre/tv/list?language=en';
+
+  try {
+    const meta = await Meta.findByPk(1);
+    const movieGenres = await tmdbFetch(movieGenresPath);
+    const tvGenres = await tmdbFetch(tvGenresPath);
+
+    await meta.update({ tmdbMovieGenres: movieGenres.genres, tmdbTvGenres: tvGenres.genres });
+    res.json({ success: true, items: movieGenres.genres.length + tvGenres.genres.lenght, t: Date.now() });
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}
+
 /* Get TMDB Images */
 export async function getTMDBImages(req, res) {
   const cat = req.params.category;

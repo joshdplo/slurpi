@@ -8,6 +8,7 @@ import {
   pageTMDB,
   getTMDBData,
   getTMDBImages,
+  getTMDBStatic,
   postTMDBItem
 } from './controllers/tmdbController.js';
 import {
@@ -43,6 +44,7 @@ router.get(['/api/test-fetch', '/api/test-fetch/:delay'], apiTestFetch);
 
 // TMDB
 router.get('/api/tmdb/:category/:subcategory', getTMDBData);
+router.get('/api/tmdb/static', getTMDBStatic);
 router.get('/api/tmdb-images/:category', getTMDBImages);
 router.post('/api/tmdb-item/:category/:id', postTMDBItem);
 

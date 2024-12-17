@@ -36,6 +36,14 @@ const Meta = sequelize.define('Meta', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
+  tmdbMovieGenres: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  tmdbTvGenres: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
   totalSteamGames: {
     type: DataTypes.INTEGER,
     defaultValue: 0
