@@ -204,7 +204,7 @@ function formatSpotifyData(cat, data) {
     if (cat === 'albums') {
       item = data[i].album;
       metaKey = 'totalSpotifyAlbums';
-
+      console.log(item.release_date, typeof item.release_date);
       formatted.push({
         id: item.id,
         name: item.name,
@@ -212,7 +212,7 @@ function formatSpotifyData(cat, data) {
         total_tracks: item.total_tracks,
         url: item.external_urls?.spotify,
         image: item?.images[1].url, // ~300px
-        release_date: item.album?.release_date
+        release_date: item.release_date
       });
     }
 
@@ -314,6 +314,8 @@ export async function getSpotifyData(req, res) {
       if (force || !dbItem) {
         currentModel.create(formattedData[i]);
         metaDBWrites++;
+      } else {
+        await dbItem.update(formattedData[i]);
       }
     }
 
