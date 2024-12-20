@@ -128,7 +128,7 @@ const catUrls = {
   tracks: '/tracks?offset=0&limit=50&locale=en-US', // saved tracks @ user-library-read
   albums: '/albums?offset=0&limit=50&locale=en-US', // saved albums @ user-library-read
   shows: '/shows?offset=0&limit=50&locale=en-US', // saved shows (podcasts) @ user-library-read
-  artists: '/following?type=artist&limit=50&locale=en-US', // user followed artists @ user-follow-read
+  artists: '/following?type=artist&limit=10&locale=en-US', // user followed artists @ user-follow-read // @TODO RESET LIMIT AFTER TESTING
   toptracks: '/top/tracks?limit=10&time_range=long_term&locale=en-US' // top tracks @ user-top-read
 };
 
@@ -204,7 +204,7 @@ function formatSpotifyData(cat, data) {
     if (cat === 'albums') {
       item = data[i].album;
       metaKey = 'totalSpotifyAlbums';
-      console.log(item.release_date, typeof item.release_date);
+
       formatted.push({
         id: item.id,
         name: item.name,
@@ -259,24 +259,19 @@ export async function getSpotifyData(req, res) {
 
   try {
     const meta = await Meta.findByPk(1);
+
+    let currentPage = 1;
     const initialData = await spotifyFetch(req, fetchUrl);
 
     // Top-level data (varies between request type)
     // this should contain the fields 'limit', 'total', 'next', etc.
-    const getUnwrappedData = () => {
-      if (cat === 'artists') return initialData.artists;
-      return initialData;
+    const getUnwrappedData = (raw) => {
+      if (cat === 'artists') return raw.artists;
+      return raw;
     }
 
-    // Iterable data (varies between request type)
-    // this would be the items[] array
-    const getIterableData = () => {
-      if (cat === 'artists') return initialData.artists.items;
-      return initialData.items;
-    }
-
-    const unwrappedData = getUnwrappedData();
-    const iterableData = getIterableData();
+    const unwrappedData = getUnwrappedData(initialData);
+    const iterableData = unwrappedData.items;
 
     const getTotalResults = () => {
       if (cat === 'toptracks') return unwrappedData.limit;
@@ -284,23 +279,33 @@ export async function getSpotifyData(req, res) {
     }
 
     let spotifyData = [...iterableData];
-    const nextUrl = unwrappedData.next;
+    let nextUrl = unwrappedData.next;
     const limit = unwrappedData.limit;
     const totalResults = getTotalResults();
-    const numPages = Math.ceil(totalResults / limit);
+    const totalPages = Math.ceil(totalResults / limit);
 
-    if (limit < totalResults && nextUrl) {
-      for (let i = 0; i < numPages; i++) {
+    if ((totalPages > currentPage) && nextUrl) {
+      currentPage++;
+
+      for (let i = currentPage; i <= totalPages; i++) {
+        if (!nextUrl) return;
         const newData = await spotifyFetch(req, nextUrl);
-        spotifyData = [...newData.items, ...spotifyData];
+        const newDataUnwrapped = getUnwrappedData(newData);
+
+        console.log('@@@@@@@@@@');//REMOVE
+        console.log(newDataUnwrapped.next);//REMOVE
+        spotifyData = [...newDataUnwrapped.items, ...spotifyData];
 
         sendMessage({
           fetch: req.path,
           error: false,
           complete: false,
-          progress: Math.floor((i + 1 / numPages) * 100),
-          message: `Page ${i + 1}/${numPages}`,
+          progress: Math.floor((currentPage / totalPages) * 100),
+          message: `Page ${currentPage}/${totalPages} (${totalResults} items)`,
         });
+
+        nextUrl = newDataUnwrapped.next;
+        currentPage++;
       }
     }
 
@@ -328,7 +333,7 @@ export async function getSpotifyData(req, res) {
     metaDBWrites = 0;
     metaObj = {};
 
-    res.json({ success: true, items: spotifyData.length, t: Date.now() });
+    res.json({ success: true, items: formattedData.length, t: Date.now() });
   } catch (error) {
     console.error(error);
     res.json({ error, t: Date.now() });
