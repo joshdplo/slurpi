@@ -123,6 +123,7 @@ export const getSteamData = async (req, res) => {
           progress,
           message,
         });
+        console.log(message);
 
         if (!force && dbGames[i].capsule_image) {
           // already has details
