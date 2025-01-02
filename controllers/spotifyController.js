@@ -12,6 +12,8 @@ import SpotifyAlbum from '../db/SpotifyAlbum.js';
 import SpotifyArtist from '../db/SpotifyArtist.js';
 import SpotifyShow from '../db/SpotifyShow.js';
 
+const REDIRECT_URI = process.env.NODE_ENV === 'production' ? process.env.SPOTIFY_REDIRECT_URI_PROD : process.env.SPOTIFY_REDIRECT_URI;
+
 /**
  * Meta Data
  */
@@ -57,7 +59,7 @@ export async function getSpotifyLogin(req, res) {
       response_type: 'code',
       client_id: process.env.SPOTIFY_CLIENT_ID,
       scope: scopes.join(' '),
-      redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+      redirect_uri: REDIRECT_URI,
       state: state
     }));
 }
@@ -77,7 +79,7 @@ export async function getSpotifyCallback(req, res) {
   // Set up fetch
   const fetchBodyObj = {
     code,
-    redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+    redirect_uri: REDIRECT_URI,
     grant_type: 'authorization_code'
   };
   const urlSearchParams = new URLSearchParams();
