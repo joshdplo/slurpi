@@ -369,6 +369,7 @@ export async function getSpotifyImages(req, res) {
           progress: Math.floor((i + 1 / imageURLs.length) * 100),
           message: `Skipping image ${i + 1}/${imageURLs.length} (already exists)`,
         });
+        console.log(`Skipping image ${i + 1}/${imageURLs.length} (already exists)`);
       } else {
         sendMessage({
           fetch: req.path,
@@ -377,6 +378,7 @@ export async function getSpotifyImages(req, res) {
           progress: Math.floor((i + 1 / imageURLs.length) * 100),
           message: `Image ${i + 1}/${imageURLs.length}`,
         });
+        console.log(`Image ${i + 1}/${imageURLs.length}`);
 
         const response = await fetch(imageURLs[i].url);
         const stream = Readable.fromWeb(response.body);

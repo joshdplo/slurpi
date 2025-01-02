@@ -1,7 +1,7 @@
 import { sendEvent } from "../fe-util.js";
 
 const port = __WS_PORT__;
-const socket = new WebSocket(`ws://${window.location.host.split(':')[0]}:${port}`);
+const socket = new WebSocket(`${window.location.host.indexOf('localhost') > -1 ? 'ws://' : 'https://'}${window.location.host.split(':')[0]}:${port}`);
 
 // Connection opened
 socket.addEventListener("open", (event) => {
