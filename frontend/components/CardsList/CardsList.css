@@ -48,6 +48,14 @@
   border: 3px solid var(--c-white);
 }
 
+.CardsList .card .info .title {
+  font-size: .8rem;
+}
+
+.CardsList .card .info .artist {
+  font-size: .7rem;
+}
+
 .CardsList .card:hover img {
   filter: blur(4px);
 }

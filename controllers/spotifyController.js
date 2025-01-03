@@ -124,7 +124,7 @@ export async function getSpotifyCallback(req, res) {
 /**
  * Spotify API
  */
-const validCats = ['tracks', 'albums', 'shows', 'artists', 'toptracks'];
+const validCats = ['tracks', 'songs', 'albums', 'shows', 'artists', 'toptracks'];
 const baseUrl = 'https://api.spotify.com/v1/me';
 const catUrls = {
   tracks: '/tracks?offset=0&limit=50&locale=en-US', // saved tracks @ user-library-read
@@ -169,7 +169,7 @@ async function spotifyFetch(req, path) {
 // Spotify Model Helper
 function getSpotifyModel(category) {
   let model;
-  if (category === 'tracks' || category === 'toptracks') model = SpotifySong;
+  if (category === 'tracks' || category === 'toptracks' || category === 'songs') model = SpotifySong;
   if (category === 'albums') model = SpotifyAlbum;
   if (category === 'artists') model = SpotifyArtist;
   if (category === 'shows') model = SpotifyShow;
@@ -398,6 +398,32 @@ export async function getSpotifyImages(req, res) {
     metaImageDownloads = 0;
 
     res.json({ success: true, items: imageURLs.length, t: Date.now() });
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}
+
+/* Update Spotify Item */
+export async function postSpotifyItem(req, res) {
+  const cat = req.params.category;
+  const id = req.params.id;
+  if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
+
+  try {
+    const currentModel = getSpotifyModel(cat);
+    const item = await currentModel.findByPk(id);
+    console.log('@@@@@');//REMOVE
+    console.log(item);//REMOVE
+    if (item) {
+      for (let [key, val] of Object.entries(req.body)) {
+        item[key] = val;
+      }
+      await item.save();
+      res.json({ success: true, items: 1, t: Date.now() });
+    } else {
+      res.json({ error: `Item with id ${id} not found`, t: Date.now() });
+    }
   } catch (error) {
     console.error(error);
     res.json({ error, t: Date.now() });

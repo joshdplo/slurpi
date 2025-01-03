@@ -22,7 +22,8 @@ import {
   getSpotifyLogin,
   getSpotifyCallback,
   getSpotifyData,
-  getSpotifyImages
+  getSpotifyImages,
+  postSpotifyItem
 } from './controllers/spotifyController.js';
 const router = express.Router();
 
@@ -58,5 +59,6 @@ router.get('/spotify/login', getSpotifyLogin);
 router.get('/auth/spotify', getSpotifyCallback);
 router.get('/api/spotify/:category', getSpotifyData);
 router.get('/api/spotify-images/:category', getSpotifyImages);
+router.post('/api/spotify-item/:category/:id', postSpotifyItem);
 
 export default router;

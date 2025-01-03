@@ -57,20 +57,16 @@
       <div class="content">
         <div class="data-list">
           <h2>Songs</h2>
-          <% songs.forEach(i => { %>
-          <span class="data-song"><%= i.name %></span>
-          <% }) %>
+          <div class="CardsList spotify-songs" data-cards="<%= JSON.stringify(songs) %>"></div>
+        </div>
+        <div class="data-list">
+          <h2>Artists</h2>
+          <div class="CardsList spotify-artists" data-cards="<%= JSON.stringify(artists) %>"></div>
         </div>
         <div class="data-list">
           <h2>Albums</h2>
           <% albums.forEach(i => { %>
           <span class="data-album"><%= i.name %></span>
-          <% }) %>
-        </div>
-        <div class="data-list">
-          <h2>Artists</h2>
-          <% artists.forEach(i => { %>
-          <span class="data-artist"><%= i.name %></span>
           <% }) %>
         </div>
         <div class="data-list">

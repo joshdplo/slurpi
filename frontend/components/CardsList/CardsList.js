@@ -22,6 +22,7 @@ export default function CardsList(container, service, category) {
     const imgSrc = `/images/${service}/${id}.jpg`;
     const title = data?.name || data?.title;
     const description = data?.description || data?.short_description || data?.overview || null;
+    const artists = data?.artists ? data.artists.map(a => a.name) : null;
     const isMega = data?.mega ? 'mega' : null;
     const isSuper = data?.super ? 'super' : null;
 
@@ -31,6 +32,7 @@ export default function CardsList(container, service, category) {
       <image src="${imgSrc}" alt="${title}" loading="lazy">
       <div class="info">
         <span class="title">${title}</span>
+        ${artists ? artists.map(a => `<span class="artist">${a}</span>`) : ''}
         <div class="edit">
           <label for="super${id}">
             SUPER?

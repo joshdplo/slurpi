@@ -26,6 +26,12 @@ document.addEventListener('DOMContentLoaded', function DOMLoaded() {
   CardsList(tmdbMoviesContainer, 'tmdb', 'movies');
   CardsList(tmdbShowsContainer, 'tmdb', 'tv');
 
+  // spotify cards
+  const spotifySongsContainer = document.querySelector('.spotify-songs');
+  const spotifyArtistsContainer = document.querySelector('.spotify-artists');
+  CardsList(spotifySongsContainer, 'spotify', 'songs');
+  CardsList(spotifyArtistsContainer, 'spotify', 'artists');
+
   // steam cards
   const steamContainer = document.querySelector('.steam-games');
   CardsList(steamContainer, 'steam', 'games');
