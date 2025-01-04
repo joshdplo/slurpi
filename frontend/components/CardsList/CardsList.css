@@ -62,7 +62,6 @@
 
 .CardsList .card:hover .info {
   opacity: 1;
-  transform: scale(1.15);
 }
 
 .CardsList .info label {

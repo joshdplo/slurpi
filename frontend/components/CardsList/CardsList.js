@@ -42,6 +42,10 @@ export default function CardsList(container, service, category) {
             MEGA?
             <input type="checkbox" name="mega" id="mega${id}" ${isMega ? 'checked' : ''}>
           </label>
+          <label for="delete${id}">
+            DELETE?
+            <input type="checkbox" name="delete" id="delete${id}">
+          </label>
         </div>
       </div>
     `;
@@ -75,6 +79,7 @@ export default function CardsList(container, service, category) {
       e.target.setAttribute('disabled', 'true');
       await updateValue(`/api/${service}-item/${category}/${itemId}`, { [checkboxName]: isChecked });
       e.target.removeAttribute('disabled');
+      if (checkboxName === 'delete') document.querySelector(`.card[data-id="${itemId}"]`)?.remove();
     }
   }
 

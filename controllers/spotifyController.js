@@ -413,13 +413,15 @@ export async function postSpotifyItem(req, res) {
   try {
     const currentModel = getSpotifyModel(cat);
     const item = await currentModel.findByPk(id);
-    console.log('@@@@@');//REMOVE
-    console.log(item);//REMOVE
     if (item) {
-      for (let [key, val] of Object.entries(req.body)) {
-        item[key] = val;
+      if (req.body.delete) {
+        await item.destroy();
+      } else {
+        for (let [key, val] of Object.entries(req.body)) {
+          item[key] = val;
+        }
+        await item.save();
       }
-      await item.save();
       res.json({ success: true, items: 1, t: Date.now() });
     } else {
       res.json({ error: `Item with id ${id} not found`, t: Date.now() });

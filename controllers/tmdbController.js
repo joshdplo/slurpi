@@ -284,10 +284,14 @@ export async function postTMDBItem(req, res) {
     const item = await currentModel.findByPk(id);
 
     if (item) {
-      for (let [key, val] of Object.entries(req.body)) {
-        item[key] = val;
+      if (req.body.delete) {
+        await item.destroy();
+      } else {
+        for (let [key, val] of Object.entries(req.body)) {
+          item[key] = val;
+        }
+        await item.save();
       }
-      await item.save();
       res.json({ success: true, items: 1, t: Date.now() });
     } else {
       res.json({ error: `Item with id ${id} not found`, t: Date.now() });
