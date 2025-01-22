@@ -18,8 +18,8 @@
             <h1>Steam</h1>
           </div>
           <div class="right">
-            <span>Games: <%= totalSteamGames %></span>
-            <span>Recently Played: <%= totalRecentSteamGames %></span>
+            <span>Games: <%= steamGames.length %></span>
+            <span>Recently Played: <%= steamGames.filter(g => g.recent).length %></span>
           </div>
         </div>
         <span class="spacer-2"></span>
