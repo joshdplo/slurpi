@@ -20,7 +20,6 @@ const REDIRECT_URI = process.env.NODE_ENV === 'production' ? process.env.SPOTIFY
 let metaApiCalls = 0;
 let metaDBWrites = 0;
 let metaImageDownloads = 0;
-let metaObj = {};
 
 /**
  * Spotify Page
@@ -180,7 +179,6 @@ function getSpotifyModel(category) {
 // Spotify Formatting Helper
 function formatSpotifyData(cat, data) {
   const formatted = [];
-  let metaKey = '';
 
   for (let i = 0; i < data.length; i++) {
     let item = data[i];
@@ -188,7 +186,6 @@ function formatSpotifyData(cat, data) {
     // tracks/toptracks formatting
     if (cat === 'tracks' || cat === 'toptracks') {
       item = cat === 'tracks' ? data[i].track : data[i];
-      metaKey = 'totalSpotifySongs';
 
       formatted.push({
         id: item.id,
@@ -205,7 +202,6 @@ function formatSpotifyData(cat, data) {
     // albums formatting
     if (cat === 'albums') {
       item = data[i].album;
-      metaKey = 'totalSpotifyAlbums';
 
       formatted.push({
         id: item.id,
@@ -220,7 +216,6 @@ function formatSpotifyData(cat, data) {
 
     // artists formatting
     if (cat === 'artists') {
-      metaKey = 'totalSpotifyArtists';
 
       formatted.push({
         id: item.id,
@@ -234,7 +229,6 @@ function formatSpotifyData(cat, data) {
     // shows formatting
     if (cat === 'shows') {
       item = data[i].show;
-      metaKey = 'totalSpotifyShows';
 
       formatted.push({
         id: item.id,
@@ -247,7 +241,6 @@ function formatSpotifyData(cat, data) {
     }
   }
 
-  metaObj = { [metaKey]: data.length };
   return formatted;
 }
 
@@ -328,12 +321,10 @@ export async function getSpotifyData(req, res) {
 
     await meta.update({
       totalApiCalls: meta.totalApiCalls + metaApiCalls,
-      totalDBWrites: meta.totalDBWrites + metaDBWrites,
-      ...metaObj
+      totalDBWrites: meta.totalDBWrites + metaDBWrites
     });
     metaApiCalls = 0;
     metaDBWrites = 0;
-    metaObj = {};
 
     res.json({ success: true, items: formattedData.length, t: Date.now() });
   } catch (error) {

@@ -99,10 +99,10 @@ export const getSteamData = async (req, res) => {
           metaDBWrites++;
         }
 
-        await meta.update({ totalRecentSteamGames: fetchedGames.length, totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
+        await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
       }
 
-      if (cat === 'games') await meta.update({ totalSteamGames: fetchedGames.length, totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
+      if (cat === 'games') await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
 
       metaDBWrites = 0;
       metaApiCalls = 0;

@@ -20,22 +20,6 @@ const Meta = sequelize.define('Meta', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
-  totalMovies: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  ratedMovies: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalShows: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  ratedShows: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
   tmdbMovieGenres: {
     type: DataTypes.JSON,
     defaultValue: []
@@ -43,30 +27,6 @@ const Meta = sequelize.define('Meta', {
   tmdbTvGenres: {
     type: DataTypes.JSON,
     defaultValue: []
-  },
-  totalSteamGames: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalRecentSteamGames: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalSpotifySongs: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalSpotifyAlbums: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalSpotifyArtists: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalSpotifyShows: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
   },
 }, { timestamps: true });
 

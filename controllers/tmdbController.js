@@ -152,30 +152,9 @@ export async function getTMDBData(req, res) {
         }
       });
 
-      const metaTotalObj = () => {
-        let key;
-        if (cat === 'movies') {
-          if (subcat === 'rated') {
-            key = 'ratedMovies';
-          } else {
-            key = 'totalMovies';
-          }
-        }
-        if (cat === 'tv') {
-          if (subcat === 'rated') {
-            key = 'ratedShows';
-          } else {
-            key = 'totalShows';
-          }
-        }
-
-        return { [key]: totalResults };
-      }
-
       await meta.update({
         totalApiCalls: meta.totalApiCalls + metaApiCalls,
-        totalDBWrites: meta.totalDBWrites + metaDBWrites,
-        ...metaTotalObj()
+        totalDBWrites: meta.totalDBWrites + metaDBWrites
       });
 
       res.json({ success: true, items: tmdbData.length, t: Date.now() });
