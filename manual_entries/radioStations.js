@@ -3,7 +3,7 @@ import RadioStation from '../db/RadioStation.js';
 const stations = [
   {
     id: 'somafm_indiepoprocks',
-    name: 'Soma FM - Indie Pop Rocks',
+    name: 'Indie Pop Rocks (Soma FM)',
     genres: ['indie', 'indie pop', 'indie rock'],
     url: 'https://somafm.com/indiepop/',
     super: false,
@@ -11,7 +11,7 @@ const stations = [
   },
   {
     id: 'somafm_deepspaceone',
-    name: 'Soma FM - Deep Space One',
+    name: 'Deep Space One (Soma FM)',
     genres: ['electronic', 'ambient'],
     url: 'https://somafm.com/deepspaceone/',
     super: false,
@@ -19,7 +19,7 @@ const stations = [
   },
   {
     id: 'difm_vocaltrance',
-    name: 'DI FM - Vocal Trance',
+    name: 'Vocal Trance (DI FM)',
     genres: ['electronic', 'vocal trance'],
     url: 'https://www.di.fm/vocaltrance',
     super: false,
@@ -27,7 +27,7 @@ const stations = [
   },
   {
     id: 'difm_deephouse',
-    name: 'DI FM - Deep House',
+    name: 'Deep House (DI FM)',
     genres: ['electronic', 'house', 'deep house'],
     url: 'https://www.di.fm/deephouse',
     super: false,
@@ -35,7 +35,7 @@ const stations = [
   },
   {
     id: 'difm_spacedreams',
-    name: 'DI FM - Space Dreams',
+    name: 'Space Dreams (DI FM)',
     genres: ['electronic', 'ambient'],
     url: 'https://www.di.fm/spacemusic',
     super: false,
