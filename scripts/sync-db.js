@@ -7,6 +7,7 @@ import SpotifySong from '../db/SpotifySong.js';
 import SpotifyAlbum from '../db/SpotifyAlbum.js';
 import SpotifyArtist from '../db/SpotifyArtist.js';
 import SpotifyShow from '../db/SpotifyShow.js';
+import RadioStation from '../db/RadioStation.js';
 
 async function syncDB() {
   await sequelize.sync({ force: true }); // force table drop + recreate

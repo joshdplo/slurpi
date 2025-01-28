@@ -8,6 +8,7 @@
     "dev": "concurrently --kill-others --names client,server \"vite build --watch\" \"nodemon server.js\"",
     "build": "vite build",
     "prod": "NODE_ENV=production node server.js",
+    "manual": "node scripts/manual-entries.js",
     "json": "node scripts/generate-json.js",
     "sync": "node scripts/sync-db.js"
   },
