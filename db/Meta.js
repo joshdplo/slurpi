@@ -32,7 +32,12 @@ const Meta = sequelize.define('Meta', {
     type: DataTypes.JSON,
     defaultValue: [],
     allowNull: true
-  }
+  },
+  buildHistory: {
+    type: DataTypes.JSON,
+    defaultValue: [],
+    allowNull: true
+  },
 }, { timestamps: true });
 
 export default Meta;
