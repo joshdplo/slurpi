@@ -8,6 +8,7 @@ import SpotifySong from '../db/SpotifySong.js';
 import SpotifyAlbum from '../db/SpotifyAlbum.js';
 import SpotifyArtist from '../db/SpotifyArtist.js';
 import SpotifyShow from '../db/SpotifyShow.js';
+import RadioStation from '../db/RadioStation.js';
 
 (async () => {
   const meta = await Meta.findAll();
@@ -18,8 +19,9 @@ import SpotifyShow from '../db/SpotifyShow.js';
   const spotifyAlbums = await SpotifyAlbum.findAll();
   const spotifyArtists = await SpotifyArtist.findAll();
   const spotifyShows = await SpotifyShow.findAll();
+  const radioStations = await RadioStation.findAll();
 
-  const data = { meta, movies, shows, steamGames, spotifySongs, spotifyAlbums, spotifyArtists, spotifyShows };
+  const data = { meta, movies, shows, steamGames, spotifySongs, spotifyAlbums, spotifyArtists, spotifyShows, radioStations };
   for (const key of Object.keys(data)) {
     console.log(`Writing ${key} JSON (${data[key].length} items)...`);
     await writeFile(join(`/json/${key}.json`), JSON.stringify(data[key]));
