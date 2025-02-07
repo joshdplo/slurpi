@@ -5,6 +5,9 @@ import {
   apiTestFetch,
 } from './controllers/defaultController.js';
 import {
+  pageMessage,
+} from './controllers/messageController.js';
+import {
   pageTMDB,
   getTMDBData,
   getTMDBImages,
@@ -32,6 +35,7 @@ const router = express.Router();
  */
 router.get('/', pageDashboard);
 router.get('/test', pageTest);
+router.get('/messages', pageMessage);
 router.get('/tmdb', pageTMDB);
 router.get('/steam', pageSteam);
 router.get('/spotify', pageSpotify);

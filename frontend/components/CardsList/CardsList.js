@@ -2,10 +2,7 @@ import './CardsList.css';
 import { sendEvent, createElement } from '../../fe-util.js';
 
 export default function CardsList(container, service, category) {
-  if (!container) {
-    console.warn(`No container found for ${service}/${category}`);
-    return;
-  }
+  if (!container) return;
   const cardsArr = JSON.parse(container.getAttribute('data-cards'));
 
   function getCardLInk(data) {
@@ -19,8 +16,9 @@ export default function CardsList(container, service, category) {
     if (data?.invalid) return;
 
     const id = data?.appid || data?.id;
-    const imgSrc = `/images/${service}/${id}.jpg`;
+    const imgSrc = service ? `/images/${service}/${id}.jpg` : null;
     const title = data?.name || data?.title;
+    const text = data?.text;
     const description = data?.description || data?.short_description || data?.overview || null;
     const artists = data?.artists ? data.artists.map(a => a.name) : null;
     const isMega = data?.mega ? 'mega' : null;
@@ -29,10 +27,11 @@ export default function CardsList(container, service, category) {
     const wrapper = createElement('div', ['card', isMega, isSuper]);
     wrapper.setAttribute('data-id', id);
     wrapper.innerHTML = `
-      <image src="${imgSrc}" alt="${title}" loading="lazy">
+      ${imgSrc && `<img src="${imgSrc}" alt="${title}" loading="lazy">`}
       <div class="info">
         <span class="title">${title}</span>
-        ${artists ? artists.map(a => `<span class="artist">${a}</span>`) : ''}
+        ${text && `<p>${text}</p>`}
+        ${artists && artists.map(a => `<span class="artist">${a}</span>`)}
         <div class="edit">
           <label for="super${id}">
             SUPER?

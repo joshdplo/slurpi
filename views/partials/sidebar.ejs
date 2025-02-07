@@ -5,6 +5,7 @@
     </a>
     <hr>
     <ul>
+      <li><a href="/messages" title="Messages"><%- include('../partials/svg/message'); %> Messages</a></li>
       <li><a href="/tmdb" title="TMDB"><%- include('../partials/svg/tmdb'); %> TMDB</a></li>
       <li><a href="/steam" title="Steam"><%- include('../partials/svg/steam'); %> Steam</a></li>
       <li><a href="/spotify" title="Spotify"><%- include('../partials/svg/spotify'); %> Spotify</a></li>
@@ -13,9 +14,6 @@
   <div class="bottom">
     <a href="/test"><%- include('../partials/svg/wrench'); %> Test Page</a>
     <hr>
-    <span><%= totalApiCalls %> API Calls Made</span>
-    <span><%= totalDBWrites %> DB Writes Made</span>
-    <span><%= totalImageDownloads %> Image Downloads</span>
     <span><%= dbSize %> DB Size</span>
     <hr>
     <a href="https://github.com/joshdplo/slurpi" title="View Code On Github">

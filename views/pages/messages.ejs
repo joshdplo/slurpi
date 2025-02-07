@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <div class="wrapper-default contain">
+    <%- include ('../partials/sidebar') %>
+
+    <main id="content">
+      <div class="content flex-center">
+        <div class="page-banner">
+          <div class="left">
+            <%- include('../partials/svg/message'); %>
+            <h1>Messages</h1>
+          </div>
+          <div class="right">
+            <span>Unread: <%= messages.filter(m => m.read === false).length %></span>
+            <span>Total: <%= messages.length %></span>
+          </div>
+        </div>
+        <span class="spacer-1"></span>
+      </div>
+
+      <div class="content">
+        <div class="CardsList messages-display" data-cards="<%= JSON.stringify(messages) %>"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="global-alerts"></div>
+  <%- include ('../partials/end') %>
+</body>
+
+</html>

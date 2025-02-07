@@ -1,6 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import { join } from '../be-util.js';
 import Meta from '../db/Meta.js';
+import Message from '../db/Message.js';
 import Movie from '../db/Movie.js';
 import Show from '../db/Show.js';
 import SteamGame from '../db/SteamGame.js';
@@ -12,6 +13,7 @@ import RadioStation from '../db/RadioStation.js';
 
 (async () => {
   const meta = await Meta.findAll();
+  const message = await Message.findAll();
   const movies = await Movie.findAll();
   const shows = await Show.findAll();
   const steamGames = await SteamGame.findAll();
@@ -21,7 +23,7 @@ import RadioStation from '../db/RadioStation.js';
   const spotifyShows = await SpotifyShow.findAll();
   const radioStations = await RadioStation.findAll();
 
-  const data = { meta, movies, shows, steamGames, spotifySongs, spotifyAlbums, spotifyArtists, spotifyShows, radioStations };
+  const data = { meta, message, movies, shows, steamGames, spotifySongs, spotifyAlbums, spotifyArtists, spotifyShows, radioStations };
   for (const key of Object.keys(data)) {
     console.log(`Writing ${key} JSON (${data[key].length} items)...`);
     await writeFile(join(`/json/${key}.json`), JSON.stringify(data[key]));

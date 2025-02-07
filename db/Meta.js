@@ -8,18 +8,6 @@ const Meta = sequelize.define('Meta', {
     allowNull: false,
     defaultValue: process.env.NAME
   },
-  totalApiCalls: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalDBWrites: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  totalImageDownloads: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
   tmdbMovieGenres: {
     type: DataTypes.JSON,
     defaultValue: []

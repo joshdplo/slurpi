@@ -4,18 +4,10 @@ import { existsSync } from 'node:fs';
 import { Readable } from 'node:stream';
 import { join, sleep } from '../be-util.js';
 import { sendMessage } from '../wss.js';
-import Meta from '../db/Meta.js';
 import SteamGame from "../db/SteamGame.js";
 
 /**
- * Meta Data
- */
-let metaApiCalls = 0;
-let metaDBWrites = 0;
-let metaImageDownloads = 0;
-
-/**
- * Steam Pages
+ * Steam Page
  */
 export async function pageSteam(req, res, next) {
   const steamGames = await SteamGame.findAll();
@@ -54,7 +46,6 @@ async function steamFetch(path) {
       throw new Error('steamFetch() response fetch not ok');
     };
 
-    metaApiCalls++;
     const data = await response.json();
     return data;
   } catch (error) {
@@ -70,8 +61,6 @@ export const getSteamData = async (req, res) => {
   const fetchUrl = urls[cat];
 
   try {
-    const meta = await Meta.findByPk(1);
-
     if (cat !== 'gamedetails') {
       // Standard categories
       const fetchedData = await steamFetch(fetchUrl);
@@ -82,10 +71,8 @@ export const getSteamData = async (req, res) => {
         const dbGame = await SteamGame.findOne({ where: { appid: fetchedGames[i].appid } });
         if (dbGame) {
           await dbGame.update(fetchedGames[i]);
-          metaDBWrites++;
         } else {
           await SteamGame.create(fetchedGames[i]);
-          metaDBWrites++;
         }
 
         numResults++;
@@ -96,16 +83,9 @@ export const getSteamData = async (req, res) => {
         for (let i = 0; i < allDbGames.length; i++) {
           const isRecent = fetchedGames.find(f => f.appid === allDbGames[i].appid) !== undefined;
           await allDbGames[i].update({ recent: isRecent });
-          metaDBWrites++;
         }
-
-        await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
       }
 
-      if (cat === 'games') await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
-
-      metaDBWrites = 0;
-      metaApiCalls = 0;
       return res.json({ success: true, items: numResults, t: Date.now() });
     } else {
       // Game details monster request
@@ -148,12 +128,10 @@ export const getSteamData = async (req, res) => {
           // - you will still get per-hour rate limited if you have too many games.
           //   steam allows 100k requests/day at the time of writing, which
           //   comes out to ~69 request/minute
-          metaDBWrites++;
           await sleep();
         }
       }
 
-      await meta.update({ totalApiCalls: meta.totalApiCalls + metaApiCalls, totalDBWrites: meta.totalDBWrites + metaDBWrites });
       return res.json({ success: true, items: dbGames.length, t: Date.now() });
     }
   } catch (error) {
@@ -169,7 +147,6 @@ export async function getSteamImages(req, res) {
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
 
   try {
-    const meta = await Meta.findByPk(1);
     const imageFolder = '/public/images/steam';
     const dbItems = await SteamGame.findAll();
 
@@ -203,15 +180,12 @@ export async function getSteamImages(req, res) {
         const response = await fetch(imageURLs[i].url);
         const stream = Readable.fromWeb(response.body);
         await writeFile(imagePath, stream);
-        metaImageDownloads++;
       }
 
       // it looks like images may not be rate limited, so we don't need to sleep() here!
       // if you get a 429, try throwing in a sleep(500) here or higher
     }
 
-    await meta.update({ totalImageDownloads: meta.totalImageDownloads + metaImageDownloads });
-    metaImageDownloads = 0;
     res.json({ success: true, items: dbItems.length, t: Date.now() });
   } catch (error) {
     console.error(error);

@@ -6,20 +6,12 @@ import { Readable } from 'node:stream';
 import { generateRandomString } from "../be-util.js";
 import { join } from '../be-util.js';
 import { sendMessage } from '../wss.js';
-import Meta from '../db/Meta.js';
 import SpotifySong from '../db/SpotifySong.js';
 import SpotifyAlbum from '../db/SpotifyAlbum.js';
 import SpotifyArtist from '../db/SpotifyArtist.js';
 import SpotifyShow from '../db/SpotifyShow.js';
 
 const REDIRECT_URI = process.env.NODE_ENV === 'production' ? process.env.SPOTIFY_REDIRECT_URI_PROD : process.env.SPOTIFY_REDIRECT_URI;
-
-/**
- * Meta Data
- */
-let metaApiCalls = 0;
-let metaDBWrites = 0;
-let metaImageDownloads = 0;
 
 /**
  * Spotify Page
@@ -158,7 +150,6 @@ async function spotifyFetch(req, path) {
     };
 
     const data = await response.json();
-    metaApiCalls++;
     return data;
   } catch (error) {
     console.error('error with spotifyFetch()', error);
@@ -253,8 +244,6 @@ export async function getSpotifyData(req, res) {
   const currentModel = getSpotifyModel(cat);
 
   try {
-    const meta = await Meta.findByPk(1);
-
     let currentPage = 1;
     const initialData = await spotifyFetch(req, fetchUrl);
 
@@ -313,18 +302,10 @@ export async function getSpotifyData(req, res) {
 
       if (force || !dbItem) {
         currentModel.create(formattedData[i]);
-        metaDBWrites++;
       } else {
         await dbItem.update(formattedData[i]);
       }
     }
-
-    await meta.update({
-      totalApiCalls: meta.totalApiCalls + metaApiCalls,
-      totalDBWrites: meta.totalDBWrites + metaDBWrites
-    });
-    metaApiCalls = 0;
-    metaDBWrites = 0;
 
     res.json({ success: true, items: formattedData.length, t: Date.now() });
   } catch (error) {
@@ -340,7 +321,6 @@ export async function getSpotifyImages(req, res) {
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
 
   try {
-    const meta = await Meta.findByPk(1);
     const currentModel = getSpotifyModel(cat);
     const imageFolder = '/public/images/spotify';
     const dbItems = await currentModel.findAll();
@@ -376,17 +356,11 @@ export async function getSpotifyImages(req, res) {
         const response = await fetch(imageURLs[i].url);
         const stream = Readable.fromWeb(response.body);
         await writeFile(imagePath, stream);
-        metaImageDownloads++;
       }
 
       // it looks like images may not be rate limited, so we don't need to sleep() here!
       // if you get a 429, try throwing in a sleep(500) here or higher
     }
-
-    await meta.update({
-      totalImageDownloads: meta.totalImageDownloads + metaImageDownloads
-    });
-    metaImageDownloads = 0;
 
     res.json({ success: true, items: imageURLs.length, t: Date.now() });
   } catch (error) {

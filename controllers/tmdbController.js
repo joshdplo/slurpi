@@ -4,19 +4,11 @@ import { existsSync } from 'node:fs';
 import { Readable } from 'node:stream';
 import { join } from '../be-util.js';
 import { sendMessage } from '../wss.js';
-import Meta from '../db/Meta.js';
 import Movie from '../db/Movie.js';
 import Show from '../db/Show.js';
 
 /**
- * Meta Data
- */
-let metaApiCalls = 0;
-let metaDBWrites = 0;
-let metaImageDownloads = 0;
-
-/**
- * TMDB Pages
+ * TMDB Page
  */
 export async function pageTMDB(req, res, next) {
   try {
@@ -73,7 +65,6 @@ async function tmdbFetch(path) {
     };
 
     const data = await response.json();
-    metaApiCalls++;
     return data;
   } catch (error) {
     console.error('error with tmdbFetch()', error);
@@ -91,8 +82,6 @@ export async function getTMDBData(req, res) {
   const url = () => `/account/${accountId}/${subcat}/${cat}?language=en-US&page=${currentPage}&sort_by=created_at.asc`;
 
   try {
-    const meta = await Meta.findByPk(1);
-
     // Initial fetch - get total pages
     const initialData = await tmdbFetch(url());
     const totalPages = initialData.total_pages;
@@ -130,7 +119,6 @@ export async function getTMDBData(req, res) {
       // If there is no data, bulk create the data
       await currentModel.bulkCreate(tmdbData, { validate: true })
         .then(() => {
-          metaDBWrites++;
           res.json({ success: true, items: tmdbData.length, t: Date.now() });
         })
         .catch(err => {
@@ -144,17 +132,10 @@ export async function getTMDBData(req, res) {
         if (dbItem) {
           await dbItem.update(fetchedItem)
             .catch(err => console.error(err));
-          metaDBWrites++;
         } else {
           await currentModel.create(fetchedItem)
             .catch(err => console.error(err));
-          metaDBWrites++;
         }
-      });
-
-      await meta.update({
-        totalApiCalls: meta.totalApiCalls + metaApiCalls,
-        totalDBWrites: meta.totalDBWrites + metaDBWrites
       });
 
       res.json({ success: true, items: tmdbData.length, t: Date.now() });
@@ -171,7 +152,6 @@ export async function getTMDBStatic(req, res) {
   const tvGenresPath = '/genre/tv/list?language=en';
 
   try {
-    const meta = await Meta.findByPk(1);
     const movieGenres = await tmdbFetch(movieGenresPath);
     const tvGenres = await tmdbFetch(tvGenresPath);
 
@@ -185,7 +165,6 @@ export async function getTMDBStatic(req, res) {
       formattedTvGenres[genre.id] = genre.name;
     });
 
-    await meta.update({ tmdbMovieGenres: formattedMovieGenres, tmdbTvGenres: formattedTvGenres });
     res.json({ success: true, items: movieGenres.genres.length + tvGenres.genres.lenght, t: Date.now() });
   } catch (error) {
     console.error(error);
@@ -200,8 +179,6 @@ export async function getTMDBImages(req, res) {
   if (validCats.indexOf(cat) === -1) return res.json({ error: `Invalid category: ${cat}` });
 
   try {
-    const meta = await Meta.findByPk(1);
-
     const currentModel = getTMDBModel(cat);
     const imageFolder = '/public/images/tmdb';
     const dbItems = await currentModel.findAll();
@@ -236,15 +213,12 @@ export async function getTMDBImages(req, res) {
         const response = await fetch(imageURLs[i].url);
         const stream = Readable.fromWeb(response.body);
         await writeFile(imagePath, stream);
-        metaImageDownloads++;
       }
 
       // it looks like images may not be rate limited, so we don't need to sleep() here!
       // if you get a 429, try throwing in a sleep(500) here or higher
     }
 
-    await meta.update({ totalImageDownloads: meta.totalImageDownloads + metaImageDownloads });
-    metaImageDownloads = 0;
     res.json({ success: true, items: imageURLs.length, t: Date.now() });
   } catch (error) {
     console.error(error);

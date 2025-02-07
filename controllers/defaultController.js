@@ -1,13 +1,17 @@
 import { addAlert } from '../middlewares/alertMiddleware.js';
 import { sendMessage } from '../wss.js';
+import Message from '../db/Message.js';
 
 /**
  * Dashboard
  */
 export const pageDashboard = async (req, res) => {
   try {
+    const messages = await Message.findAll();
+
     res.render('pages/dashboard', {
       title: 'Dashboard',
+      messages
     });
   } catch (error) {
     console.error(error.message);

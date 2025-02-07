@@ -35,4 +35,8 @@ document.addEventListener('DOMContentLoaded', function DOMLoaded() {
   // steam cards
   const steamContainer = document.querySelector('.steam-games');
   CardsList(steamContainer, 'steam', 'games');
+
+  // messages
+  const messagesContainer = document.querySelector('.messages-display');
+  CardsList(messagesContainer, 'messages');
 });

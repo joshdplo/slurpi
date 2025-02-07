@@ -1,5 +1,6 @@
 import sequelize from '../db/db.js';
 import Meta from '../db/Meta.js';
+import Message from '../db/Message.js';
 import Movie from '../db/Movie.js';
 import Show from '../db/Show.js';
 import SteamGame from '../db/SteamGame.js';

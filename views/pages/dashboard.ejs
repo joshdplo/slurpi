@@ -12,15 +12,14 @@
     <main id="content">
       <div class="content flex-center">
         <h1>Dashboard</h1>
-        <p>I didn't get around to putting anything in here, but maybe you can!!</p>
-        <br><br>
-        <ul>
-          <li><a href="/tmdb">Go to TMDB &raquo;</a></li>
-          <li><a href="/steam">Go to Steam &raquo;</a></li>
-          <li><a href="/spotify">Go to Spotify &raquo;</a></li>
-          <li><a href="/test">Go to Test Page &raquo;</a></li>
-        </ul>
         <span class="spacer-2"></span>
+      </div>
+      <div class="content">
+        <div class="messages">
+          <h2>Messages</h2>
+          <div><%= messages.filter(m => m.read === false).length || 0 %> Unread Messages</div>
+          <div><%= messages.length %> Total Messages</div>
+        </div>
       </div>
     </main>
   </div>

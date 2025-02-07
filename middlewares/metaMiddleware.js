@@ -1,5 +1,5 @@
 import Meta from "../db/Meta.js";
-import { getDBSize, formatNumber } from "../be-util.js";
+import { getDBSize } from "../be-util.js";
 
 export default async function metaMiddleware(req, res, next) {
   try {
@@ -17,9 +17,6 @@ export default async function metaMiddleware(req, res, next) {
 
     // Set Locals
     res.locals.dbSize = dbSize;
-    res.locals.totalApiCalls = formatNumber(meta.totalApiCalls);
-    res.locals.totalDBWrites = formatNumber(meta.totalDBWrites);
-    res.locals.totalImageDownloads = formatNumber(meta.totalImageDownloads);
 
     next();
   } catch (error) {
