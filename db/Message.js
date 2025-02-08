@@ -7,10 +7,6 @@ const Message = sequelize.define('Message', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
   text: {
     type: DataTypes.JSON,
     allowNull: false
