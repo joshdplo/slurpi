@@ -17,8 +17,8 @@
       <div class="content">
         <div class="messages">
           <h2>Messages</h2>
-          <div><%= messages.filter(m => m.read === false).length || 0 %> Unread Messages</div>
-          <div><%= messages.length %> Total Messages</div>
+          <div><%= messagesData.filter(m => m.read === false).length || 0 %> Unread Messages</div>
+          <div><%= messagesData.length %> Total Messages</div>
         </div>
       </div>
     </main>

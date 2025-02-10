@@ -17,15 +17,22 @@
             <h1>Messages</h1>
           </div>
           <div class="right">
-            <span>Unread: <%= messages.filter(m => m.read === false).length %></span>
-            <span>Total: <%= messages.length %></span>
+            <span>Total: <%= messagesData.length %></span>
+            <span>Most Recent:
+              <%= messagesData.length ? new Date(messagesData[0].createdAt).toLocaleDateString('en-US') : 'none' %></span>
           </div>
         </div>
         <span class="spacer-1"></span>
       </div>
 
+      <div class="content spam">
+        Spam Attempts: <%= meta.spamHistory.length %>
+        Last Spam Attempt:
+        <%= meta.spamHistory.length ? new Date(meta.spamHistory[0]).toLocaleDateString('en-US') : 'none' %>
+      </div>
+
       <div class="content">
-        <div class="CardsList messages-display" data-cards="<%= JSON.stringify(messages) %>"></div>
+        <div class="CardsList messages-display" data-cards="<%= JSON.stringify(messagesData) %>"></div>
       </div>
 
     </main>

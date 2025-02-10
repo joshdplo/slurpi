@@ -16,7 +16,7 @@ export default function CardsList(container, service, category) {
     if (data?.invalid) return;
 
     const id = data?.appid || data?.id;
-    const imgSrc = service ? `/images/${service}/${id}.jpg` : null;
+    const imgSrc = service !== 'messages' ? `/images/${service}/${id}.jpg` : null;
     const title = data?.name || data?.title;
     const text = data?.text;
     const description = data?.description || data?.short_description || data?.overview || null;

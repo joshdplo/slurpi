@@ -11,10 +11,6 @@ const Message = sequelize.define('Message', {
     type: DataTypes.JSON,
     allowNull: false
   },
-  read: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
 }, { timestamps: true });
 
 export default Message;

@@ -85,3 +85,13 @@
 .CardsList.steam-games .card .info {
   height: auto;
 }
+
+/* Messages */
+.CardsList.messages-display {
+  grid-template-columns: 1fr;
+}
+
+.CardsList.messages-display .card .info {
+  position: relative;
+  opacity: 1;
+}

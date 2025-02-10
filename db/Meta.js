@@ -26,6 +26,14 @@ const Meta = sequelize.define('Meta', {
     defaultValue: [],
     allowNull: true
   },
+  lastMessageDate: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  spamHistory: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  }
 }, { timestamps: true });
 
 export default Meta;

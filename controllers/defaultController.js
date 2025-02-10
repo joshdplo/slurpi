@@ -7,11 +7,11 @@ import Message from '../db/Message.js';
  */
 export const pageDashboard = async (req, res) => {
   try {
-    const messages = await Message.findAll();
+    const messagesData = await Message.findAll();
 
     res.render('pages/dashboard', {
       title: 'Dashboard',
-      messages
+      messagesData
     });
   } catch (error) {
     console.error(error.message);
