@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import { Readable } from 'node:stream';
 import { join } from '../be-util.js';
 import { sendMessage } from '../wss.js';
+import Meta from '../db/Meta.js';
 import Movie from '../db/Movie.js';
 import Show from '../db/Show.js';
 
@@ -152,6 +153,7 @@ export async function getTMDBStatic(req, res) {
   const tvGenresPath = '/genre/tv/list?language=en';
 
   try {
+    const meta = await Meta.findByPk(1);
     const movieGenres = await tmdbFetch(movieGenresPath);
     const tvGenres = await tmdbFetch(tvGenresPath);
 
@@ -164,6 +166,10 @@ export async function getTMDBStatic(req, res) {
     tvGenres.genres.forEach(genre => {
       formattedTvGenres[genre.id] = genre.name;
     });
+
+    meta.tmdbMovieGenres = formattedMovieGenres;
+    meta.tmdbTvGenres = formattedTvGenres;
+    await meta.save();
 
     res.json({ success: true, items: movieGenres.genres.length + tvGenres.genres.lenght, t: Date.now() });
   } catch (error) {
