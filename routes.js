@@ -26,6 +26,7 @@ import {
   getSpotifyCallback,
   getSpotifyData,
   getSpotifyImages,
+  updateSpotifyGiantPlaylist,
   postSpotifyItem
 } from './controllers/spotifyController.js';
 const router = express.Router();
@@ -61,6 +62,7 @@ router.post('/api/steam-item/:category/:id', postSteamItem);
 // Spotify
 router.get('/spotify/login', getSpotifyLogin);
 router.get('/auth/spotify', getSpotifyCallback);
+router.get('/api/spotify/giantplaylist', updateSpotifyGiantPlaylist); // needs to come before below :category wildcard route
 router.get('/api/spotify/:category', getSpotifyData);
 router.get('/api/spotify-images/:category', getSpotifyImages);
 router.post('/api/spotify-item/:category/:id', postSpotifyItem);

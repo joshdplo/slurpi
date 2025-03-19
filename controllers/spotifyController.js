@@ -12,6 +12,7 @@ import SpotifyArtist from '../db/SpotifyArtist.js';
 import SpotifyShow from '../db/SpotifyShow.js';
 
 const REDIRECT_URI = process.env.NODE_ENV === 'production' ? process.env.SPOTIFY_REDIRECT_URI_PROD : process.env.SPOTIFY_REDIRECT_URI;
+const GIANT_PLAYLIST_ID = process.env.SPOTIFY_GIANT_PLAYLIST_ID;
 
 /**
  * Spotify Page
@@ -40,7 +41,7 @@ export async function pageSpotify(req, res, next) {
 /**
  * Spotify Auth
  */
-const scopes = ['user-library-read', 'user-top-read', 'user-follow-read'];
+const scopes = ['user-library-read', 'user-top-read', 'user-follow-read', 'playlist-read-private', 'playlist-modify-private', 'playlist-modify-public'];
 const state = generateRandomString(16);
 
 // Spotify Login (Redirect)
@@ -115,18 +116,19 @@ export async function getSpotifyCallback(req, res) {
 /**
  * Spotify API
  */
-const validCats = ['tracks', 'songs', 'albums', 'shows', 'artists', 'toptracks'];
+const validCats = ['tracks', 'songs', 'albums', 'shows', 'artists', 'toptracks', 'giantplaylist'];
 const baseUrl = 'https://api.spotify.com/v1/me';
 const catUrls = {
   tracks: '/tracks?offset=0&limit=50&locale=en-US', // saved tracks @ user-library-read
   albums: '/albums?offset=0&limit=50&locale=en-US', // saved albums @ user-library-read
   shows: '/shows?offset=0&limit=50&locale=en-US', // saved shows (podcasts) @ user-library-read
-  artists: '/following?type=artist&limit=10&locale=en-US', // user followed artists @ user-follow-read // @TODO RESET LIMIT AFTER TESTING
-  toptracks: '/top/tracks?limit=10&time_range=long_term&locale=en-US' // top tracks @ user-top-read
+  artists: '/following?type=artist&limit=50&locale=en-US', // user followed artists @ user-follow-read
+  toptracks: '/top/tracks?limit=10&time_range=long_term&locale=en-US', // top tracks @ user-top-read
+  giantplaylisttracks: `https://api.spotify.com/v1/playlists/${GIANT_PLAYLIST_ID}/tracks`, // liked songs to playlist @ playlist-read-private, playlist-modify-private, playlist-modify-public
 };
 
 // Spotify Fetch Helper
-async function spotifyFetch(req, path) {
+async function spotifyFetch(req, path, body, isPost) {
   const token = req?.session?.spotifyAccessToken;
   if (!token) {
     const err = 'Invalid token in spotifyFetch:';
@@ -141,6 +143,9 @@ async function spotifyFetch(req, path) {
       Authorization: `Bearer ${req.session.spotifyAccessToken}`
     }
   };
+
+  if (body) options.body = JSON.stringify(body);
+  if (isPost) options.method = 'POST';
 
   try {
     const response = await fetch(path, options);
@@ -369,7 +374,7 @@ export async function getSpotifyImages(req, res) {
   }
 }
 
-/* Update Spotify Item */
+/* Update Spotify Item (mega, super) */
 export async function postSpotifyItem(req, res) {
   const cat = req.params.category;
   const id = req.params.id;
@@ -391,6 +396,99 @@ export async function postSpotifyItem(req, res) {
     } else {
       res.json({ error: `Item with id ${id} not found`, t: Date.now() });
     }
+  } catch (error) {
+    console.error(error);
+    res.json({ error, t: Date.now() });
+  }
+}
+
+/* Update Giant Playlist */
+// This will add all of your liked songs to a playlist and ensure there are no duplicates
+// NOTE: SPOTIFY_GIANT_PLAYLIST_ID env var must be set in the .env file for this to work!!
+// @TODO: implement removal functionality (should be simple enough, but didn't have the need)
+export async function updateSpotifyGiantPlaylist(req, res) {
+  let currentPage = 1;
+
+  let allPlaylistSongs = [];
+  let songsToAdd = [];
+  let duplicateSongs = 0;
+
+  try {
+    // GET INITIAL DATA
+    const allSavedSongs = await SpotifySong.findAll();
+    const initialPlaylistSongs = await spotifyFetch(req, catUrls.giantplaylisttracks);
+
+    // GET ALL PLAYLIST TRACKS
+    allPlaylistSongs = initialPlaylistSongs.items;
+    let nextUrl = initialPlaylistSongs.next;
+    const limit = initialPlaylistSongs.limit;
+    const totalResults = initialPlaylistSongs.total;
+    const totalPages = Math.ceil(totalResults / limit);
+
+
+    if ((totalPages > currentPage) && nextUrl) {
+      currentPage++;
+
+      for (let i = currentPage; i <= totalPages; i++) {
+        if (!nextUrl) return;
+        const newData = await spotifyFetch(req, nextUrl);
+        allPlaylistSongs = [...allPlaylistSongs, ...newData.items];
+
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((currentPage / totalPages) * 100),
+          message: `Page ${currentPage}/${totalPages} (${totalResults} items)`,
+        });
+
+        nextUrl = newData.next;
+        currentPage++;
+      }
+    }
+
+    // DETERMINE WHICH TRACKS TO ADD (DETECT DUPLICATES), SPLIT INTO CHUNKS OF 99 AND ADD THEM!
+    for (let i = 0; i < allSavedSongs.length; i++) {
+      const isDuplicate = allPlaylistSongs.filter(s => s.track.id === allSavedSongs[i].id);
+      if (isDuplicate.length) {
+        duplicateSongs++;
+      } else {
+        songsToAdd.push(`spotify:track:${allSavedSongs[i].id}`)
+      }
+    }
+
+    const songsToAddChunks = [];
+    for (let i = 0; i < songsToAdd.length; i += 99) {
+      songsToAddChunks.push(songsToAdd.slice(i, i + 99));
+    }
+
+    // ADD TRACKS
+    // console.log('ALL PLAYLIST SONGS RESULT: ', allPlaylistSongs);//REMOVE
+    console.log(`TOTAL SAVED SONGS: ${allSavedSongs.length}`);//REMOVE
+    console.log(`TOTAL PLAYLIST SONGS: ${allPlaylistSongs.length}`);//REMOVE
+    console.log(`NUMBER OF DUPLICATE SONGS: ${duplicateSongs}`);//REMOVE
+    console.log(`NUMBER OF SONGS TO ADD: ${songsToAdd.length}`);//REMOVE
+
+    if (songsToAddChunks.length) {
+      console.log(`SONGS TO ADD CHUNKS NUMBER OF ARRAYS: ${songsToAddChunks.length} (last arr length: ${songsToAddChunks[songsToAddChunks.length - 1].length})`);//REMOVE
+
+      for (let i = 0; i < songsToAddChunks.length; i++) {
+        const bodyObj = { uris: [...songsToAddChunks[i]] };
+        await spotifyFetch(req, catUrls.giantplaylisttracks, bodyObj, true);
+
+        // @TODO: this sendmessage was added after the fact - it might not work correctly >.<
+        sendMessage({
+          fetch: req.path,
+          error: false,
+          complete: false,
+          progress: Math.floor((i / songsToAddChunks.length) * 100),
+          message: `Adding Page ${i}/${songsToAddChunks.length} of New Playlist Songs`,
+        });
+      }
+    }
+
+    // RESULT
+    res.json({ success: true, items: songsToAdd.length, t: Date.now() });
   } catch (error) {
     console.error(error);
     res.json({ error, t: Date.now() });
